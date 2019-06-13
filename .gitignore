@@ -1,0 +1,6 @@
+TODO
+dist/
+point.egg-info/
+*~
+*.o
+*.so
