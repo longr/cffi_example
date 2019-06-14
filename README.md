@@ -299,3 +299,18 @@ Then we specify the command line arguments we wish to pass to pytest, in this ca
 - PG 11, namespace and layout. Check how numpy handles this.
 - Data files, use pkg_resoucres
 - Tr y and figure out how matplotlib or numpy does its C code.
+
+
+## To Do.
+- Tidy up last few comments and code.
+- Write one 'post'?
+- Split into multiple?
+- Restart a blog?
+  - python and cffi.
+  - packaging python
+  - my hovercraft is full of eels
+  - letting go with git.
+  Eventually:
+  - calling c code from R and Python the easy way.
+- Add documentations
+- Consider adding a 'case-study' or 'why you should' or 'Alice and Bob story' at the beginning of each tutorial / instruction.
