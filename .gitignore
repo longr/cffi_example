@@ -1,6 +1,10 @@
 TODO
 dist/
-point.egg-info/
+build/
+fibonacci.egg-info/
 *~
 *.o
 *.so
+__pycache__
+*.pyc
+_*.c
