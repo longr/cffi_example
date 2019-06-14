@@ -17,7 +17,9 @@ def fib(n):
 def fast_fib(n):              
     a, b = 0, 1
     number = 1
-    while number != n:
+    if n < 2:
+        return n
+    while number < n:
         a, b = b, a + b
         number += 1
     return b

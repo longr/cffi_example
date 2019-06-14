@@ -20,6 +20,9 @@ int fast_fibonacci(int num) {
   int b = 1;
   int number = 1;
   int c = 0;
+  if (num < 2) {
+    return num;
+  }
   while (number != num) {
     c = b;
     b = b + a;
