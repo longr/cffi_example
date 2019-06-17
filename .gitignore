@@ -8,3 +8,5 @@ fibonacci.egg-info/
 __pycache__
 *.pyc
 _*.c
+.coverage
+.tox
