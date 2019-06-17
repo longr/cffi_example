@@ -8,7 +8,7 @@ ffi = cffi.FFI()
 # globals needed to use the shared object. It must be in valid C syntax.
 # we read in the header file and pass this to cdef.
 
-with open("src/fibonacci.h") as f:
+with open("fibonacci/src/fibonacci.h") as f:
     ffi.cdef(f.read())
 
 
@@ -20,8 +20,8 @@ with open("src/fibonacci.h") as f:
 ffi.set_source(
     "fibonacci._fibonacci",
     '#include "fibonacci.h"',
-    include_dirs=["src/"],
-    sources=["src/fibonacci.c"],
+    include_dirs=["fibonacci/src/"],
+    sources=["fibonacci/src/fibonacci.c"],
 )
 
 #

@@ -15,7 +15,7 @@ setup(
     setup_requires=["cffi", "pytest-runner"],
     tests_require=["pytest"],
     cffi_modules=["fibonacci/build_fibonacci.py:ffi"],
-    include_dirs=["src"],
+    include_dirs=["fibonacci/src"],
     install_requires=["cffi"],
     keywords="python cffi example c-code",
     # license='need one',

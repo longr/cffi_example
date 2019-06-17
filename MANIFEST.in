@@ -1,2 +1,2 @@
-recursive-include src *.c *h
+recursive-include fibonacci/src *.c *h
 include setup.cfg
