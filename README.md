@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/longr/cffi_example.svg?branch=master)](https://travis-ci.org/longr/cffi_example)
-[![codecov](https://codecov.io/gh/longr/cffi_example.svg?branch=master)](https://codecov.io/gh/longr/cffi_example)
+[![codecov](https://codecov.io/gh/longr/cffi_example/branch/master/graph/badge.svg)](https://codecov.io/gh/longr/cffi_example)
 
 # CFFI - Python and C example.
 
