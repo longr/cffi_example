@@ -7,5 +7,7 @@ before_install:
   - sudo apt-get install -qq build-essential gcc libffi-dev python3-dev
 install:
   - pip install -r requirements.txt
+  - pip install codecov pytest-cov
   - pip install -e .
-script: pytest
+script:
+  - pytest --cov=./
