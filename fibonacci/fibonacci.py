@@ -1,5 +1,5 @@
 # import the c extention module we built.
-import _fibonacci
+from . import _fibonacci
 
 
 def cfib(n):

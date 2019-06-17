@@ -1,1 +1,1 @@
-from fibonacci import cfib, cfast_fib, fib, fast_fib
+from .fibonacci import cfib, cfast_fib, fib, fast_fib
