@@ -13,7 +13,7 @@ setup(
     description="An example package that demonstrates how to layout and create a python package, and also demonstrates how to call c code from python using CFFI.",
     packages=find_packages(),
     setup_requires=["cffi", "pytest-runner"],
-    test_require=["pytest"],
+    tests_require=["pytest"],
     cffi_modules=["fibonacci/build_fibonacci.py:ffi"],
     include_dirs=["src"],
     install_requires=["cffi"],

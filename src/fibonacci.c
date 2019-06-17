@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include "fibonacci.h"
 
-/* Get the nth fibonacci number */
-int fibonacci(int num) {
+ /* Get the nth fibonacci number */
+unsigned long long int fibonacci(int num) {
   if (num == 0) {
     return 0;
   }
@@ -15,11 +15,11 @@ int fibonacci(int num) {
   }
 }
 
-int fast_fibonacci(int num) {
-  int a = 0;
-  int b = 1;
+unsigned long long int fast_fibonacci(int num) {
+  unsigned long long int a = 0;
+  unsigned long long int b = 1;
   int number = 1;
-  int c = 0;
+  unsigned long long int c = 0;
   if (num < 2) {
     return num;
   }
