@@ -1,6 +1,7 @@
 ## CFFI API out-of-line implementation.
 
 import cffi
+
 ffi = cffi.FFI()
 
 # cdef() expects a single string declaring the C types, functions and
@@ -16,11 +17,12 @@ with open("src/fibonacci.h") as f:
 # The C source code needs to make the declared functions,
 # types and globals available, so it is often just the "#include".
 
-ffi.set_source("fibonacci._fibonacci",
-               '#include "fibonacci.h"',
-               include_dirs=['src/'],
-               sources=['src/fibonacci.c'])
+ffi.set_source(
+    "fibonacci._fibonacci",
+    '#include "fibonacci.h"',
+    include_dirs=["src/"],
+    sources=["src/fibonacci.c"],
+)
 
 #
 ffi.compile(verbose=False)
-
