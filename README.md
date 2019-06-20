@@ -298,7 +298,7 @@ Then we specify the command line arguments we wish to pass to pytest, in this ca
 
 
 
-#Questions
+# Questions
 - PG 11, namespace and layout. Check how numpy handles this.
 - Data files, use pkg_resoucres
 - Tr y and figure out how matplotlib or numpy does its C code.

@@ -14,13 +14,11 @@
 
 [Packaging - PyPi](https://the-hitchhikers-guide-to-packaging.readthedocs.io/en/latest/contributing.html)
 
-[Packaging Python Projects](https://packaging.python.org/tutorials/packaging-projects/#generating-distri
-bution-archives)
+[Packaging Python Projects](https://packaging.python.org/tutorials/packaging-projects/#generating-distribution-archives)
 
 [Packaging binary extensions](https://packaging.python.org/guides/packaging-binary-extensions/)
 
-[Building and uploading to PyPi](https://python-packaging-tutorial.readthedocs.io/en/latest/uploading_py
-pi.html)
+[Building and uploading to PyPi](https://python-packaging-tutorial.readthedocs.io/en/latest/uploading_pypi.html)
 
 [Setuptools](https://setuptools.readthedocs.io/en/latest/setuptools.html#using-find-packages)
 
