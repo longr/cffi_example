@@ -238,7 +238,7 @@ The slowest run took 63.27 times longer than the fastest. This could mean that a
 
 As we can see, the C implementation `cfib` is 60 times faster than the pure python `fib` function.  Re-writing this slow python function means that `fast_fib` is nearly 10,000 times faster than `cfib`, and is nearly 600,000 times faster than `fib`. `cfast_fib` is then faster still.  This result is highly dependant on the number chosen for `n`, but does show us the power of using C code over pure python code, and the power of well written code over poorly written code.
 
-##Testing
+## Testing
 
 Add details on using pytest.
 
