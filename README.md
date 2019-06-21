@@ -155,7 +155,21 @@ ffi.compile(verbose=False)
 
 In this example, `tests` contains a single file, `test_fibonacci.py`. We could easily have many files in here, and it is a good idea to have a different test file for each python file being tested.  These tests will be used by `pytest` to check whether our code gives the results we expect.
 
-##
+## Other files
+
+There are several other files located outside the `fibonacci` directory that are needed by this project and we will discuss them later, for now we will list them with brief summaries.
+
+- `.gitignore`: contains a list of files for git to ignore.
+- `MANIFEST.in`: contains a list of files that we want included in the package when we build it, that would not normally be included by default.
+- `notes.md`: Not related to the package, just some notes.
+- `README.md`: This is what you are currently reading, it is the face of your project.
+- `requirements.txt`: This contains a list of python modules that need to be installed for your package.
+- `setup.cfg`: This is the configuration file for `setup.py`
+- `setup.py`: This handles building the package and running tests.
+- `tox.ini`: Configuration file for tox, a testing system for python.
+- `.travis.yml`: Configuration file for TravisCI, a continuous intergration system that runs our tests each time we push changes to github.
+
+
 
 
 
@@ -171,28 +185,51 @@ In this example, `tests` contains a single file, `test_fibonacci.py`. We could e
 #. Add Code coverage.
 #. Add docs
 
-## Build and install
-Build using
-```
-python setup.py sdist
-```
 
-and then install by doing:
+## Building the package.
+
+Since we have added what we need to `setup.py` and `setup.cfg`, we can build our package by just issueing the following command:
 
 ```
-pip install . --user
+python setup sdist bdist_wheel
+```
+
+[] Find out what difference is between sdist and bdist_wheel.
+
+We can then install the built package by doing
+```
+pip install dist/<package_name>-<version>.tar.gz --user
+```
+ `<package_name>` and `<version>` are the name and version number we gave the package in `setup.py`.
+```
+
+In this case, it is `fibonacci-0.1.tar.gz` and we install it by typing:
+
+```
+pip install dist/fibonacci-0.1.tar.gz --user
+```
+
+..note: virtualenv
+
+  If you are in a virtual environment, then you will not need the --user flag.  This ensures that
+  the package is installed locally for the user instead of global (which will error unless you have
+  administrator priviledges
+
+
+
+## Running the package
+
+To run the package, open up a python prompt (`ipython` is recommended) and then import the modules:
+```
+import fibonacci
+```
+We can then call each function by doing `<module_name>.<function_name>` such as:
+```
+fibonacci.fib(10)
 ```
 
 
-## Running.
 
-Run the code using following commands:
-
-```
-import Point
-new_point = point.Point(2, 3)
-new_point.show_point()
-```
 
 
 ## How it works.
