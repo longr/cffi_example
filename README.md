@@ -44,7 +44,7 @@ To create a simple package with no C code, we just need two files in our `fibona
 
 ### __init__.py
 
-`__init__.py` is a special file for python, we know this as its name starts and ends with double underscores. This file tells python that the directory it is in is a module (which can be imported in python doing `import </path/to/directory/><directory_name>`).
+`fibonacci/__init__.py` is a special file for python, we know this as its name starts and ends with double underscores. This file tells python that the directory it is in is a module (which can be imported in python doing `import </path/to/directory/><directory_name>`).
 
 The only thing in here is:
 
@@ -73,7 +73,7 @@ This would require that any user has to know exactly what the name of each file 
 
 ### fibonacci.py
 
-`fibonacci.py` contains our two python functions.  The source code for which is:
+`fibonacci/fibonacci.py` contains our two python functions.  The source code for which is:
 
 ```
 def fib(n):
@@ -96,6 +96,66 @@ def fast_fib(n):
 
 As you can see, there is nothing special about this file, it is just a python file with two functions.
 
+### c_wrapper.py
+
+`fibonacci/c_wrapper.py` does what it says, it has python code that we wrap around the C code.  We could have this do something fancy, but these functions simply provide a cleaner and shorter way of calling the functions written in C. It looks like normal python code, which it is.  CFFI (Discussed later) will create a module that we can just import and access the functions of as it it were any normal python module. 
+
+# import the c extention module we built.
+from . import _fibonacci
+
+
+def cfib(n):
+    return _fibonacci.lib.fibonacci(n)
+
+
+def cfast_fib(n):
+    return _fibonacci.lib.fast_fibonacci(n)
+
+
+### build_fibonacci.py
+
+`fibonacci/build_fibonacci.py` is a python file that calls the cffi (C Foreign Function Interface) module.  This is the module that allows us to call C functions from Python.  This is a very short file, and we will explain the contents in more detail later.
+
+```
+## CFFI API out-of-line implementation.
+
+import cffi
+
+ffi = cffi.FFI()
+
+# cdef() expects a single string declaring the C types, functions and
+# globals needed to use the shared object. It must be in valid C syntax.
+# we read in the header file and pass this to cdef.
+
+with open("fibonacci/src/fibonacci.h") as f:
+    ffi.cdef(f.read())
+
+
+# set_source() gives the name of the python extension module to
+# produce, and some C source code as a string.
+# The C source code needs to make the declared functions,
+# types and globals available, so it is often just the "#include".
+
+ffi.set_source(
+    "fibonacci._fibonacci",
+    '#include "fibonacci.h"',
+    include_dirs=["fibonacci/src/"],
+    sources=["fibonacci/src/fibonacci.c"],
+)
+
+#
+ffi.compile(verbose=False)
+```
+
+### src
+
+`fibonacci/src` contains the C source code that holds our C functions that we want to call from python, it contains the `.c` file and the header file, `.h`.  `build_fibonacci.py` needs to know about where these files are located, they could be located (almost) anywhere we want, but it makes sense to keep them in their own directory (`src/`), inside the packages directory (`fibonacci/`).
+
+### tests
+
+In this example, `tests` contains a single file, `test_fibonacci.py`. We could easily have many files in here, and it is a good idea to have a different test file for each python file being tested.  These tests will be used by `pytest` to check whether our code gives the results we expect.
+
+##
 
 
 
