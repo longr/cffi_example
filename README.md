@@ -6,6 +6,110 @@
 This will mature into something better, but for now it is notes and scriblings as I fumble through running C code in python using cffi.  Links tho pages that have been used to achieve this are listed at the bottom.  Main source of knowledge has been Dimitri Merejkowsky's lets build chuck norris, and the code for this (point) comes from Jim Anderson's contribution on dbader.org
 
 
+# Creating a python package with external C code.
+
+## Package layout.
+
+In this repository is a sample python package called `fibonacci` that implements 4 methods for calculating the nth fibonacci number.  Two of these are written in pure Python, and two are written in the C language.  Lets first examine the structure of this package.
+
+The package lives in a directory called *fibonacci*, the same name as the package.  Inside this are some files related to testing and installing the package, and another directory of the same name, *fiboncci*.
+
+```
+.
+|-- fibonacci
+|   |-- build_fibonacci.py
+|   |-- fibonacci.py
+|   |-- c_wrapper.py
+|   |-- __init__.py
+|   |-- src
+|   |   |-- fibonacci.c
+|   |   `-- fibonacci.h
+|   `-- tests
+|       `-- test_fibonnaci.py
+|-- MANIFEST.in
+|-- notes.md
+|-- README.md
+|-- requirements.txt
+|-- setup.cfg
+|-- setup.py
+`-- tox.ini
+
+```
+
+Inside the fiboncci directory is the main code for this package.  In it we have four files and two directories.  `__init__.py` tells python that this directory contains a module. `fibonacci.py` contains the two python functions, `c_wrapper.py` contains the python wrappers for the C functions.  `build_fibonacci.py` contains code that compiles the C code.  The `src` directory contains the C headers and files - the C code. The `test` directory contains python code that tests that our package performs as expected.
+
+## Creating the package
+
+To create a simple package with no C code, we just need two files in our `fibonacci` directory: `fibonacci.py` and `__init__.py`.
+
+### __init__.py
+
+`__init__.py` is a special file for python, we know this as its name starts and ends with double underscores. This file tells python that the directory it is in is a module (which can be imported in python doing `import </path/to/directory/><directory_name>`).
+
+The only thing in here is:
+
+```
+from .fibonacci import *
+from .c_wrapper import *
+
+```
+
+This tells python to look in the package directory (this is done by the `.`) for a file called `fibonacci`, and a file called `c_wrapper`
+
+
+If we left this empty, we would need to explicitly tell python to import the file `fibonacci.py` and use its functions by doing one of the following:
+
+```
+import fibonacci.fibonacci
+fibonacci.fibonacci.fib(3)
+```
+or
+```
+from fibonacci import fibonacci
+fibonacci.fib(3)
+```
+
+This would require that any user has to know exactly what the name of each file is that holds each function or variable.
+
+### fibonacci.py
+
+`fibonacci.py` contains our two python functions.  The source code for which is:
+
+```
+def fib(n):
+    if n < 2:
+        return n
+    else:
+        return fib(n - 1) + fib(n - 2)
+
+
+def fast_fib(n):
+    a, b = 0, 1
+    number = 1
+    if n < 2:
+        return n
+    while number < n:
+        a, b = b, a + b
+        number += 1
+    return b
+```
+
+As you can see, there is nothing special about this file, it is just a python file with two functions.
+
+
+
+
+## Components of module
+
+#. Write module (as in python code)
+#. Create module structure.
+#. Add setup.py
+#. Add tests
+#. Add C code.
+#. Add CFFI interface.
+#. Add travis and CI
+#. Add Code coverage.
+#. Add docs
 
 ## Build and install
 Build using
@@ -294,15 +398,10 @@ We specify in here some aliases so that when setup.py wants to run tests, it kno
 
 Then we specify the command line arguments we wish to pass to pytest, in this case, `--verbose`.
 
-
-
-
-
 # Questions
 - PG 11, namespace and layout. Check how numpy handles this.
 - Data files, use pkg_resoucres
-- Tr y and figure out how matplotlib or numpy does its C code.
-
+- Try and figure out how matplotlib or numpy does its C code.
 
 ## To Do.
 - Tidy up last few comments and code.
