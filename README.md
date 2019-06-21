@@ -200,10 +200,11 @@ We can then install the built package by doing
 ```
 pip install dist/<package_name>-<version>.tar.gz --user
 ```
- `<package_name>` and `<version>` are the name and version number we gave the package in `setup.py`.
-```
+
+`<package_name>` and `<version>` are the name and version number we gave the package in `setup.py`.
 
 In this case, it is `fibonacci-0.1.tar.gz` and we install it by typing:
+
 
 ```
 pip install dist/fibonacci-0.1.tar.gz --user
