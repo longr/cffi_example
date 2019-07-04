@@ -4,19 +4,19 @@ import fibonacci
 print("Check fibonacci.fib")
 
 
-# def test_fib_check_zeroth():
-#    print("1")
-#    assert fibonacci.fib(0) == 0
+def test_fib_check_zeroth():
+    print("1")
+    assert fibonacci.fib(0) == 0
 
 
-# def test_fib_check_first():
-#    print("2")
-#    assert fibonacci.fib(1) == 1
+def test_fib_check_first():
+    print("2")
+    assert fibonacci.fib(1) == 1
 
 
-# def test_fib_check_tenth():
-#    print("3")
-#    assert fibonacci.fib(10) == 55
+def test_fib_check_tenth():
+    print("3")
+    assert fibonacci.fib(10) == 55
 
 
 print("Check fibonacci.cfib")
