@@ -80,3 +80,6 @@ https://realpython.com/documenting-python-code/
 
 [Black - code style](https://github.com/python/black)
 
+## Testing
+
+[Pytest and coverage](https://stackoverflow.com/questions/21991765/how-to-generate-coverage-from-setup-py)
