@@ -440,9 +440,16 @@ The slowest run took 63.27 times longer than the fastest. This could mean that a
 
 As we can see, the C implementation `cfib` is 60 times faster than the pure python `fib` function.  Re-writing this slow python function means that `fast_fib` is nearly 10,000 times faster than `cfib`, and is nearly 600,000 times faster than `fib`. `cfast_fib` is then faster still.  This result is highly dependant on the number chosen for `n`, but does show us the power of using C code over pure python code, and the power of well written code over poorly written code.
 
-## Testing
+## Testing and Coverage
 
-Add details on using pytest.
+
+`pytest` will automatically find any tests in a direactory called `tests` (is this true, ed?)  with names beginning `test_` (again, ed?).
+
+To install `pytest` do:
+
+```bash
+pip install pytest --user
+```
 
 Tests should be designed so that they test a single function by giving it an input (if needed) and checking that the output is the expected output.  Using `pytest` it is very simple to write tests like this.  First create a file called test_fibonacci.py (by convention all files with tests in should begin test_ ), and put a test in it:
 
@@ -457,18 +464,75 @@ r is 55.  If it is, then the test will pass - if not it will fail.
 We run this test by either, calling pytest by itself, giving it the file name as an argument, or giving it the path to a directory containing tests.  
 
 ```
-python -m pytest test_fibonacci.py
+python -m pytest
 
-[longr@localhost cffi_example]$ python -m pytest fibonacci/tests/test_fibonnaci.py 
-========================================= test session starts =========================================
-platform linux2 -- Python 2.7.16, pytest-4.6.3, py-1.8.0, pluggy-0.12.0 -- /usr/bin/python
+[longr@localhost cffi_example]$ python -m pytest fibonacci/tests/test_fibonnaci.py
+
+=========================================================== test session starts ============================================================
+platform linux -- Python 3.7.4, pytest-5.2.1, py-1.8.0, pluggy-0.12.0 -- /usr/bin/python3
 cachedir: .pytest_cache
 rootdir: /home/longr/Public/PyCFFI/cffi_example, inifile: setup.cfg
-collected 1 item                                                                                    
+plugins: flakes-4.0.0, cov-2.8.1, pep8-1.0.6
+collected 12 items                                                                                                                         
 
-fibonacci/tests/test_fibonnaci.py::test_fib_check_tenth PASSED                                  [100%]
+fibonacci/tests/test_fibonnaci.py::test_fib_check_zeroth PASSED                                                                      [  8%]
+fibonacci/tests/test_fibonnaci.py::test_fib_check_first PASSED                                                                       [ 16%]
+fibonacci/tests/test_fibonnaci.py::test_fib_check_tenth PASSED                                                                       [ 25%]
+fibonacci/tests/test_fibonnaci.py::test_cfib_check_zeroth PASSED                                                                     [ 33%]
+fibonacci/tests/test_fibonnaci.py::test_cfib_check_first PASSED                                                                      [ 41%]
+fibonacci/tests/test_fibonnaci.py::test_cfib_check_tenth PASSED                                                                      [ 50%]
+fibonacci/tests/test_fibonnaci.py::test_fast_fib_check_zeroth PASSED                                                                 [ 58%]
+fibonacci/tests/test_fibonnaci.py::test_fast_fib_check_first PASSED                                                                  [ 66%]
+fibonacci/tests/test_fibonnaci.py::test_fast_fib_check_tenth PASSED                                                                  [ 75%]
+fibonacci/tests/test_fibonnaci.py::test_cfast_fib_check_zeroth PASSED                                                                [ 83%]
+fibonacci/tests/test_fibonnaci.py::test_cfast_fib_check_first PASSED                                                                 [ 91%]
+fibonacci/tests/test_fibonnaci.py::test_cfast_fib_check_tenth PASSED                                                                 [100%]
 
-====================================== 1 passed in 0.01 seconds ======================================
+============================================================ 12 passed in 0.05s ============================================================
+
+Tests will tell us whether that piece of code acts the way we think it should in the situation we have tested.  This is only part of the picture.  We want to know how much of our code is covered by tests. To do this we need to look at code coverage, which again can be checked with `pytest`. We need to install an extra module for this called `pytest-cov`
+
+```bash
+pip install pytest-cov --user
+```
+
+we can then call `pytest` with the ``--cov`` flag like so
+
+```bash
+
+[longr@localhost cffi_example]$ python3 -m pytest --cov
+=========================================================== test session starts ============================================================
+platform linux -- Python 3.7.4, pytest-5.2.1, py-1.8.0, pluggy-0.12.0 -- /usr/bin/python3
+cachedir: .pytest_cache
+rootdir: /home/longr/Public/PyCFFI/cffi_example, inifile: setup.cfg
+plugins: flakes-4.0.0, cov-2.8.1, pep8-1.0.6
+collected 12 items                                                                                                                         
+
+fibonacci/tests/test_fibonnaci.py::test_fib_check_zeroth PASSED                                                                      [  8%]
+fibonacci/tests/test_fibonnaci.py::test_fib_check_first PASSED                                                                       [ 16%]
+fibonacci/tests/test_fibonnaci.py::test_fib_check_tenth PASSED                                                                       [ 25%]
+fibonacci/tests/test_fibonnaci.py::test_cfib_check_zeroth PASSED                                                                     [ 33%]
+fibonacci/tests/test_fibonnaci.py::test_cfib_check_first PASSED                                                                      [ 41%]
+fibonacci/tests/test_fibonnaci.py::test_cfib_check_tenth PASSED                                                                      [ 50%]
+fibonacci/tests/test_fibonnaci.py::test_fast_fib_check_zeroth PASSED                                                                 [ 58%]
+fibonacci/tests/test_fibonnaci.py::test_fast_fib_check_first PASSED                                                                  [ 66%]
+fibonacci/tests/test_fibonnaci.py::test_fast_fib_check_tenth PASSED                                                                  [ 75%]
+fibonacci/tests/test_fibonnaci.py::test_cfast_fib_check_zeroth PASSED                                                                [ 83%]
+fibonacci/tests/test_fibonnaci.py::test_cfast_fib_check_first PASSED                                                                 [ 91%]
+fibonacci/tests/test_fibonnaci.py::test_cfast_fib_check_tenth PASSED                                                                 [100%]
+
+----------- coverage: platform linux, python 3.7.4-final-0 -----------
+Name                                Stmts   Miss Branch BrPart  Cover
+---------------------------------------------------------------------
+fibonacci/__init__.py                   2      0      0      0   100%
+fibonacci/c_wrapper.py                  5      0      0      0   100%
+fibonacci/fibonacci.py                 13      0      6      0   100%
+fibonacci/tests/test_fibonnaci.py      42      0      0      0   100%
+---------------------------------------------------------------------
+TOTAL                                  62      0      6      0   100%
+
+
+============================================================ 12 passed in 0.09s ============================================================
 ```
 
 ### Putting tests into a project.
@@ -491,10 +555,18 @@ test=pytest
 
 [tool:pytest]
 addopts = --verbose
+	  --cov
 ```
+
 We specify in here some aliases so that when setup.py wants to run tests, it knows to run pytest instead of the inbuilt test.
 
-Then we specify the command line arguments we wish to pass to pytest, in this case, `--verbose`.
+Then we specify the command line arguments we wish to pass to pytest, in this case, `--verbose` to give us more information, and `--cov` to generate a coverage report.  This can then be ran by doing.
+
+```bash
+python setup.py test
+```
+
+# CI with codecov
 
 # Questions
 - PG 11, namespace and layout. Check how numpy handles this.
