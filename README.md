@@ -595,3 +595,4 @@ python setup.py test
 # Github and CI
 
 codecov requires the codecov package be installed, and this is called in travis.ci.  so introduce CI for tests, and then introduce coverage CI.
+Use tests that can do 1 py version to show coverage is combined.
