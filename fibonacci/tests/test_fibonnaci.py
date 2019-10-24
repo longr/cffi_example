@@ -16,7 +16,8 @@ def test_fib_check_first():
 
 def test_fib_check_tenth():
     print("3")
-    assert fibonacci.fib(10) == 55
+    assert fibonacci.fib(10) == 52 #break test with wrong answer
+    #assert fibonacci.fib(10) == 55
 
 
 print("Check fibonacci.cfib")
