@@ -85,3 +85,7 @@ https://realpython.com/documenting-python-code/
 ## Testing
 
 [Pytest and coverage](https://stackoverflow.com/questions/21991765/how-to-generate-coverage-from-setup-py)
+
+## Examples
+
+[Good example of pytest and setup.py](https://github.com/yanqd0/csft)
