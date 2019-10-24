@@ -39,9 +39,9 @@ def test_cfib_check_tenth():
 
 print("Check fibonacci.fast_fib")
 
-# def test_fast_fib_check_zeroth():
-#    print('7')
-#    assert fibonacci.fast_fib(0) == 0
+def test_fast_fib_check_zeroth():
+    print('7')
+    assert fibonacci.fast_fib(0) == 0
 
 
 def test_fast_fib_check_first():
