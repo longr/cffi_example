@@ -2,7 +2,10 @@ import sys
 
 def fib(n):
     if sys.version_info[0] < 3:
-        raise Exception("Must be using Python 3")
+        if n < 2:
+            return n
+        else:
+            return fib(n - 1) + fib(n - 2)
     if n < 2:
         return n
     else:
