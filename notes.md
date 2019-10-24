@@ -40,6 +40,8 @@
 
 [Codecov + python + travis](https://dev.to/j0nimost/using-codecov-with-travis-ci-pytest-cov-1dfj)
 
+[exclude files from codecov](https://docs.codecov.io/docs/codecov-yaml)
+
 ## Cffi
 
 https://github.com/bast/python-cffi-demo
