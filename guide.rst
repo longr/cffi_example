@@ -77,3 +77,17 @@ Code Quality with Black
 Uploading to PiPy with CI
 =========================
 
+Linux
+-----
+OSX
+---
+Windows
+-------
+
+Extending Python with C
+=======================
+Should this be a separate thing?
+
+
+.. dont forget github tags and readmes.
+   should we discuss github and uses?
