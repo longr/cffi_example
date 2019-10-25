@@ -14,8 +14,9 @@ There are lots of resources explaining how to package, test, document and otherw
 Modules vs Packages
 ===================
 
-[RealPython Packages and Modules](https://realpython.com/python-modules-packages/)
-[Packaging - PyPi](https://the-hitchhikers-guide-to-packaging.readthedocs.io/en/latest/contributing.html)
+
+`RealPython Packages and Modules <https://realpython.com/python-modules-packages/>`_
+`Packaging - PyPi <https://the-hitchhikers-guide-to-packaging.readthedocs.io/en/latest/contributing.html>`_
 
 
 Package Layout
@@ -27,10 +28,13 @@ Package Layout
 
 `[Steps to success <https://towardsdatascience.com/10-steps-to-set-up-your-python-project-for-success-14ff88b5d13>`_
 
-[Setuptools](https://setuptools.readthedocs.io/en/latest/setuptools.html#using-find-packages)
+`Setuptools <https://setuptools.readthedocs.io/en/latest/setuptools.html#using-find-packages>`_
 
 Packaging - setup.py
 ====================
+
+
+.. create DOI
 
 Running and installing the package
 ----------------------------------
@@ -91,3 +95,7 @@ Should this be a separate thing?
 
 .. dont forget github tags and readmes.
    should we discuss github and uses?
+
+
+   .. https://github.com/pandas-dev/pandas  good readme layout
+..      https://github.com/pandas-dev/pandas
