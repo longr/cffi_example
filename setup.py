@@ -12,15 +12,4 @@ setup(
     url="https://github.com/longr/cffi_example",
     description="An example package that demonstrates how to layout and create a python package, and also demonstrates how to call c code from python using CFFI.",
     packages=find_packages(),
-    setup_requires=["cffi", "pytest-runner"],
-    tests_require=["pytest"],
-    cffi_modules=["fibonacci/build_fibonacci.py:ffi"],
-    include_dirs=["fibonacci/src"],
-    install_requires=["cffi"],
-    keywords="python cffi example c-code",
-    # license='need one',
-    # fibonacci has C extensions, so it is not zip safe.
-    # Telling setuptools this prevents it from doing an automatic
-    # check for zip safety.
-    #      zip_safe=False,
 )
