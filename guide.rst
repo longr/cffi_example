@@ -14,6 +14,23 @@ There are lots of resources explaining how to package, test, document and otherw
 Modules vs Packages
 ===================
 
+In python a module is a single python file ending in `.py` that can be imported using the command `import`. Each module has its own namespace, this means that functions in this module can call each other without having to reference the modules file name. Outside of the module, such as when we import it, the module name needs to be used when calling the a function in the file, such as in the example below.
+
+```python
+import my_module
+my_module.my_function()
+```
+Here we have imported a module named `my_module` and called a function named `my_function`.
+
+A package is a way of collecting several modules together under another common namespace.
+
+```python
+my_package/              # Package
+       __init__.py    # Initialisation file
+       module_01.py   # Module 1
+       module_02.py   # Module 2
+```
+Here we have a package named `my_package` which contains two modules imaginitivly named `module_01` and `module_02`.  When `my_package` is imported we will need to call the full function name such as `my_package.module_01.function()`.  However functions in each module only need to call the module name followed by the function such as `module_01.function()`.  
 
 `RealPython Packages and Modules <https://realpython.com/python-modules-packages/>`_
 
@@ -23,6 +40,11 @@ Modules vs Packages
 
 Package Layout
 ==============
+
+Packages have a very simple layout.  Each module is inside a directory, the only requirements (other than standard python limits on what can be in a name) is that there must be a file called `__init__.py`. This file can be empty, or it can contain an import statement which imports each module by name. 
+
+There is a lot of flexibility in allowed in how a python package is laid out, and two main schools of thought on how to lay them out.  We recommend using the `src` layout. Here, all python packages are 
+
 
 `Python <http://www.python.org/>`_
 
