@@ -11,5 +11,6 @@ setup(
     author_email="robin.long@hotmail.co.uk",
     url="https://github.com/longr/cffi_example",
     description="An example package that demonstrates how to layout and create a python package, and also demonstrates how to call c code from python using CFFI.",
-    packages=find_packages(),
+    packages=find_packages(where="src/"),
+    package_dir={"":"src"},
 )
