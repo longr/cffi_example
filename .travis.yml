@@ -11,7 +11,7 @@ before_install:
   - pip install -U pytest
   
 install:
-  - pip install '.[test]' .# install our package and test dependencies.
+  - pip install '.[test]' . # install our package and test dependencies.
 
 script:
   - pytest
