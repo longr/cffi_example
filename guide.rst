@@ -501,6 +501,15 @@ Now that we know how to test our code, we have to remember to do it often. One w
 
 Using Continuous Integration has many benefits. Not only is our code tested everytime we push to github, we can test on a variety of python versions and operating systems, without having to have access to a mchine with them - this gives us more confidence in our code, and whether it is reproducible.
 
+To use TravisCI we need to create an account with TravisCI, and grant it access to the repository that conatins your code.  To do this just go to `Travis CI <https://travis-ci.com/>`_ and sign up with your Github account.
+
+.. expand on this
+
+We then need to create a `travis.yml` file in our project directory. Lets create a basic `travis.yml` that will test our code against python 3.6.
+
+
+
+   
 `Extensive Python Testing on Travis CI <https://blog.travis-ci.com/2019-08-07-extensive-python-testing-on-travis-ci>`_
 
 `Untold stories about python unit tests <https://hackernoon.com/untold-stories-about-python-unit-tests-a141501f0ee>`_

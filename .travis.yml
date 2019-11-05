@@ -3,24 +3,15 @@ dist: xenial
 language: python
 
 python:
-  - "3.7"
-  - '3.6'
-  - "3.5"
-  - "3.4"
-  - "2.7"
-  - "pypy3.5"
+  - "3.6"
 
 before_install:
-  - sudo apt-get update -qq
-  - sudo apt-get install -qq build-essential gcc libffi-dev python3-dev
-
+  - python --version
+  - pip install -U pip
+  - pip install -U pytest
+  
 install:
-  - pip install -r requirements.txt
-  - pip install codecov pytest-cov
-  - pip install -e .
+  - pip install '.[test]' .# install our package and test dependencies.
 
 script:
-  - pytest --cov-report term --cov=fibonacci
-
-after_success:
-  - codecov
+  - pytest
