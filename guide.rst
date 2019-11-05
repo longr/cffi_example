@@ -187,7 +187,7 @@ setup(
     name="fibonacci",
     version="0.1",
     author="Robin Long",
-    author_email="robin.long1@hotmai.co.uk"
+    author_email="robin.long1@hotmai.co.uk",
     url="https://github.com/longr/python_packaging_example",
     description="A simple package containing a single module with a single function that finds the nth fibonacci number.",
     packages=find_packages(where="src"),
@@ -391,7 +391,7 @@ setup(
     name="fibonacci",
     version="0.1",
     author="Robin Long",
-    author_email="robin.long1@hotmai.co.uk"
+    author_email="robin.long1@hotmai.co.uk",
     url="https://github.com/longr/python_packaging_example",
     description="A simple package containing a single module with a single function that finds the nth fibonacci number.",
     packages=find_packages(where="src"),
@@ -493,6 +493,24 @@ addopts = --verbose
           --cov fibonacci
 ```
  
+We should also update the `tests_require` line in `setup.py` as this now requires `pytest-cov`. `setup.py` should now look like this:
+
+```python
+from setuptools import setup, find_packages
+
+setup(
+    name="fibonacci",
+    version="0.1",
+    author="Robin Long",
+    author_email="robin.long1@hotmai.co.uk",
+    url="https://github.com/longr/python_packaging_example",
+    description="A simple package containing a single module with a single function that finds the nth fibonacci number.",
+    packages=find_packages(where="src"),
+    package_dir={"":"src"},
+    install_requires=[""],
+    tests_requires=["pytest","pytest-cov"],
+)
+```
 
 Tests and Continuous Integration
 ================================
@@ -508,8 +526,42 @@ To use TravisCI we need to create an account with TravisCI, and grant it access 
 We then need to create a `travis.yml` file in our project directory. Lets create a basic `travis.yml` that will test our code against python 3.6.
 
 
+```python
+dist: xenial
 
-   
+language: python
+
+python:
+  - "3.6"
+
+before_install:
+  - pip install -U pip
+  - pip install -U pytest
+  - pip install -U pytest-cov
+  
+install:
+  - pip install '.[test]' . # install our package and test dependencies.
+
+script:
+  - pytest
+```
+
+Lets look at each part of the file.
+
+* The first line states what operating system we want to use, in this case it is Ubuntu 16.04 (codenamed xenial)
+
+* The `language` statement is the language we wish to use, in our case, python.
+* The third line lists what versions of python we want to test against.  We can specificy multiple versisons here, and out tests will be ran against each one. To begin with, we will just use python 3.6, denoted by the '3.6'.
+
+* The `before_install` statement is a list of commands we want to run before our package is installed for testing.
+  - `pip install -U pip` will upgrade the currently installed version of pip to the latest. Sometimes errors occur by not having the latest version.
+  - ` pip install -U pytest` will install and upgrade pytest.
+
+
+
+.. tests_require   https://stackoverflow.com/questions/4734292/specify-where-to-install-tests-require-dependencies-of-a-distribute-setuptools/7747140#7747140
+
+    
 `Extensive Python Testing on Travis CI <https://blog.travis-ci.com/2019-08-07-extensive-python-testing-on-travis-ci>`_
 
 `Untold stories about python unit tests <https://hackernoon.com/untold-stories-about-python-unit-tests-a141501f0ee>`_
