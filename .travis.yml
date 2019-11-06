@@ -7,4 +7,4 @@ install:
   - pip install . # install our package and test dependencies.
 
 script:
-  - pytest
+  - python setup.py test
