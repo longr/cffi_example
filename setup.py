@@ -13,5 +13,5 @@ setup(
     packages=find_packages(where="src"),
     package_dir={"":"src"},
     install_requires=[""],
-    tests_requires=["pytest","pytest-cov"],
+    tests_require=["pytest","pytest-cov"],
 )
