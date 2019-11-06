@@ -557,7 +557,7 @@ Lets look at each part of the file.
   - `pip install -U pip` will upgrade the currently installed version of pip to the latest. Sometimes errors occur by not having the latest version.
   - ` pip install -U pytest` will install and upgrade pytest.
 
-
+.. extras_require   https://stackoverflow.com/questions/4734292/specify-where-to-install-tests-require-dependencies-of-a-distribute-setuptools/7747140#7747140
 
 .. tests_require   https://stackoverflow.com/questions/4734292/specify-where-to-install-tests-require-dependencies-of-a-distribute-setuptools/7747140#7747140
 
