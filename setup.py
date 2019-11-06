@@ -12,6 +12,6 @@ setup(
     description="A simple package containing a single module with a single function that finds the nth fibonacci number.",
     packages=find_packages(where="src"),
     package_dir={"":"src"},
-    install_requires=[""],
-    tests_require=["pytest","pytest-cov"],
+    tests_require=['pytest'],
+    extras_require = {'testing': ['pytest','pytest-cov'] }
 )

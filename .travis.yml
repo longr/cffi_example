@@ -4,7 +4,7 @@ python:
   - "3.6"
 
 install:
-  - pip install . # install our package and test dependencies.
+  - pip install . .[testing]# install our package and test dependencies.
 
 script:
-  - python setup.py test
+  -  pytest
