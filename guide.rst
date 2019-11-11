@@ -2,6 +2,30 @@
 Python Packaging Example
 ========================
 
+
+Layout
+Packaging (setup.py)
+Testing (Pytest) (setup.cfg)
+Coverage (Pytest-cov) (setup.cfg)
+Testing with CI (Pytest + Travis) (setup.cfg, .travis.yml)
+Coverage with CI (Pytest + Travis + Codecov.io) (setup.cfg, .travis.yml, .codecov.yml?)
+
+With tox
+
+Testing (Pytest) (tox.ini)
+Coverage (Pytest-cov) (tox.ini)
+Testing with CI (Pytest + Travis) (tox.ini, .travis.yml)
+Coverage with CI (Pytest + Travis + Codecov.io) (tox.ini, .travis.yml, .codecov.yml?)
+
+
+
+
+
+Should we push tox?  Seems problematic and overkill. Not sure I like it.
+
+Then need to look at Docs.
+
+
 Introduction
 ============
 
@@ -293,6 +317,8 @@ Contributing
 
 Testing with pytest
 ===================
+
+.. Might have to include tox, might not be any other option.
 
 We have written some software which is great. The software above does very little, but any you are writing for yourself will probably be to do research whose results can be published, or to produce software that can be published that will help other people do research. In which case the publishers and users (and you) need to have faith that the software works as it is meant to.  Since we are researchers we don't want to go on faith alone, we want facts. We do this by testing our code.
 
