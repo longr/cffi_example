@@ -12,7 +12,8 @@ Coverage with CI (Pytest + Travis + Codecov.io) (setup.cfg, .travis.yml, .codeco
 
 With tox
 
-Testing (Pytest) (tox.ini)
+Testing (Pytest)
+Testing in Venv (Pytest + tox) (tox.ini)
 Coverage (Pytest-cov) (tox.ini)
 Testing with CI (Pytest + Travis) (tox.ini, .travis.yml)
 Coverage with CI (Pytest + Travis + Codecov.io) (tox.ini, .travis.yml, .codecov.yml?)
