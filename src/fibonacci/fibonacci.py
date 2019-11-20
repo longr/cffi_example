@@ -1,20 +1,21 @@
-"""
-main.py
-====================================
-The core module of my example project
-
-"""
-
 def fib(n):
-    """[Summary]
+    """
+    Summary line.
     
-    :param [ParamName]: [ParamDescription], defaults to [DefaultParamVal]
-    :type [ParamName]: [ParamType](, optional)
-    ...
-    :raises [ErrorType]: [ErrorDescription]
-    ...
-    :return: [ReturnDescription]
-    :rtype: [ReturnType]
+    Extended description of function.
+    
+    Parameters
+    ----------
+    arg1 : int
+        Description of arg1
+    arg2 : str
+        Description of arg2
+    
+    Returns
+    -------
+    int
+        Description of return value
+    
     """
     a, b = 0, 1
     fib_number = 1
@@ -24,21 +25,3 @@ def fib(n):
         a, b = b, a + b
         fib_number += 1
     return b
-
-
-"""
-Returns the nth fibonacci number.
-
-Takes an integer `n` and returns the nth fibonacci.
-
-Parameters
-----------
-n : integer
-The nth fibonacci number
-
-Returns
--------
-b : integer
-The value of the nth fibonacci number
-
-"""

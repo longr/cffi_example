@@ -666,6 +666,8 @@ Not looked at doctest yet.
 
 
 
+Main note on docs is need to add modules.rst to index.rst or somewhere so it is linked.  Have put notes in tox and how to use tox for api gen and docs gen.  Look at testing next, and then deploying.
+
 
 
 
