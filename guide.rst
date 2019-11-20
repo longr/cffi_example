@@ -647,6 +647,30 @@ Uploading to PiPy with CI
 `Upload to PyPi <https://gist.github.com/gboeing/dcfaf5e13fad16fc500717a3a324ec17>`_
 
 
+
+
+Documenting your project
+========================
+
+Use one of any tutorials:
+
+https://www.pythonforthelab.com/blog/documenting-with-sphinx-and-readthedocs/
+https://medium.com/@eikonomega/getting-started-with-sphinx-autodoc-part-1-2cebbbca5365
+https://gisellezeno.com/tutorials/sphinx-for-python-documentation.html
+
+Location needs to be ../../src for api docs to work.
+
+Discuss:  Use PFTL style or quickstart?  Use make or sphinx-build?  Some errors in layout, look at.
+
+Not looked at doctest yet.
+
+
+
+
+
+
+
+
 Linux
 -----
 OSX
@@ -667,6 +691,7 @@ Should this be a separate thing?
 ..      https://github.com/pandas-dev/pandas
 .. https://github.com/yanqd0/csft
 .. https://github.com/google/yapf/blob/master/README.rst
+   https://sphinx-rtd-tutorial.readthedocs.io/en/latest/docstrings.html
 
 
 
@@ -691,3 +716,5 @@ Should this be a separate thing?
    developer guide - how it works
    contributor guide - how to help
    licence - how it can be used
+http://graphviz.org/
+https://blog.codinghorror.com/code-tells-you-how-comments-tell-you-why/
