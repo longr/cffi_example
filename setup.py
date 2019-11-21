@@ -9,9 +9,9 @@ setup(
     author="Robin Long",
     author_email="robin.long1@hotmai.co.uk",
     url="https://github.com/longr/python_packaging_example",
-    description="A simple package containing a single module with a single function that finds the nth fibonacci number.",
+    description="A simple example package.",
     packages=find_packages(where="src"),
-    package_dir={"":"src"},
-    tests_require=['pytest'],
-    extras_require = {'testing': ['pytest','pytest-cov'] }
+    package_dir={"": "src"},
+    tests_require=["pytest"],
+    extras_require={"testing": ["pytest", "pytest-cov"]},
 )

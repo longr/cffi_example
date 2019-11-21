@@ -1,3 +1,2 @@
-#import fibonacci
-from .fibonacci import *
-#from .c_wrapper import *
+# import fibonacci
+from .fibonacci import fib
