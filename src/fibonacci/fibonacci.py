@@ -20,7 +20,7 @@ def fib(n):
 
     >>> import fibonacci
     >>> fibonacci.fib(10)
-    54
+    55
 
     """
     a, b = 0, 1
