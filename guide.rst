@@ -684,6 +684,81 @@ Main note on docs is need to add modules.rst to index.rst or somewhere so it is 
    https://docs.pylonsproject.org/projects/docs-style-guide/
    https://github.com/Pylons/docs-style-guide/blob/master/tox.ini
 
+   ## works  builds docs into .tox area. Better?
+#[testenv:docs2]
+#description = invoke sphinx-build to build the HTML docs
+#basepython = python3.7
+#deps = sphinx >= 1.7.5, < 2
+#     sphinx_rtd_theme
+#commands = sphinx-apidoc -f -o docs/source/ src/fibonacci
+#	 sphinx-build -d "{toxworkdir}/docs_doctree" docs/source "{toxworkdir}/docs/build" --color -W -bhtml {posargs}
+#           python -c 'import pathlib; print("documentation available under file://\{0\}".format(pathlib.Path(r"{toxworkdir}") / "docs_out" / "index.html"))'
+# not sure what last line does
+
+#works
+#works with apidoc
+### Stolen from https://opendev.org/openstack/openstacksdk/src/branch/master/tox.ini
+#[testenv:docs]
+#deps =
+#    sphinx
+#    sphinx_rtd_theme
+#commands =
+#    sphinx-apidoc -f -o docs/source/ src/fibonacci
+#    sphinx-build -W -d docs/build/doctrees -b html docs/source/ docs/build/html
+#    python -m sphinx -b doctest -d {envdir}/.cache/doctrees docs/source {envdir}/.cache/doctest
+#
+
+
+# Could  use
+
+#https://github.com/Pylons/docs-style-guide/blob/master/tox.ini
+#https://github.com/iScrE4m/pyCardDeck/blob/master/tox.ini
+
+# https://developer.ridgerun.com/wiki/index.php/How_to_generate_sphinx_documentation_for_python_code_running_in_an_embedded_system
+#[testenv:html]
+#basepython = python3.6
+#whitelist_externals = make
+#commands =
+#    make -C docs html BUILDDIR={envdir} "SPHINXOPTS=-W -E"
+
+# make -C dir: change to dir first.
+
+# Also look at:
+# https://tox.readthedocs.io/en/latest/example/documentation.html
+# https://alexgaynor.net/2010/dec/17/getting-most-out-tox/
+# https://stackoverflow.com/questions/56336234/build-fail-sphinx-error-contents-rst-not-found
+
+##works
+#[testenv:html]
+#basepython = python3.6
+#whitelist_externals = make
+#commands =
+#    make -C docs html BUILDDIR={envdir} "SPHINXOPTS=-W -E"
+
+#[testenv:linkcheck]
+#basepython = python3.6
+#whitelist_externals = make
+#commands =
+#    make -C docs linkcheck BUILDDIR={envdir} "SPHINXOPTS=-W -E"
+
+# This will do doctest
+[testenv:doctest]
+basepython = python3.6
+whitelist_externals = make
+commands =
+    make -C docs doctest BUILDDIR={envdir} "SPHINXOPTS=-W -E"
+
+#[testenv:epub]
+#basepython = python3.6
+#whitelist_externals = make
+#commands =
+#    make -C docs epub BUILDDIR={envdir} "SPHINXOPTS=-W -E"
+
+#[testenv:pdf]
+#basepython = python3.6
+#whitelist_externals = make
+#commands =
+#    make -C docs latexpdf BUILDDIR={envdir} "SPHINXOPTS=-W -E"
 
 
 
