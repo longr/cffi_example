@@ -1,21 +1,27 @@
 def fib(n):
     """
-    Summary line.
+    Calculates the value of the nth fibonnaci number.
     
-    Extended description of function.
+    Function takes a single input, n, the nth fibonacci number, and returns its value.
     
     Parameters
     ----------
-    arg1 : int
-        Description of arg1
-    arg2 : str
-        Description of arg2
+     n : int
+        nth fibonacci number
     
     Returns
     -------
     int
-        Description of return value
+        The value of the nth fibonacci number.
     
+    Examples
+    --------
+    Get the value of the 10th fibonacci number
+
+    >>> import fibonacci
+    >>> fibonacci.fib(10)
+    54
+
     """
     a, b = 0, 1
     fib_number = 1
