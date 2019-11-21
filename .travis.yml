@@ -3,13 +3,17 @@ language: python
 python:
   - "3.6"
   - "3.8"
-  - "docs"
 
 install:
   - pip install tox-travis codecov
 
 script:
   - tox -vv
+
+matrix:
+  include:
+    - python: 3.7
+    env: TOXENV=docs
 
 after_success:
   - codecov
