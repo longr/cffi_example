@@ -664,11 +664,25 @@ Discuss:  Use PFTL style or quickstart?  Use make or sphinx-build?  Some errors 
 
 Not looked at doctest yet.
 
-
+for apidocs:  https://github.com/sphinx-contrib/apidoc
 
 Main note on docs is need to add modules.rst to index.rst or somewhere so it is linked.  Have put notes in tox and how to use tox for api gen and docs gen.  Look at testing next, and then deploying.
 
 
+.. links
+   https://opendev.org/openstack/openstacksdk/src/branch/master/tox.ini
+   https://pypi.org/project/pytest-sphinx/
+   https://samnicholls.net/2016/06/15/how-to-sphinx-readthedocs/
+   https://tox.readthedocs.io/en/latest/example/documentation.html
+
+   https://medium.com/@eikonomega/getting-started-with-sphinx-autodoc-part-1-2cebbbca5365
+   https://alexgaynor.net/2010/dec/17/getting-most-out-tox/
+   https://alexgaynor.net/2010/dec/17/getting-most-out-tox/
+   https://github.com/Syntaf/travis-sphinx
+   https://ofosos.org/2019/01/06/doctest-travis/
+   https://blog.justinwflory.com/2018/12/meet-an-opinionated-quickstart-for-sphinx-docs-authors/
+   https://docs.pylonsproject.org/projects/docs-style-guide/
+   https://github.com/Pylons/docs-style-guide/blob/master/tox.ini
 
 
 
