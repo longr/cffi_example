@@ -565,24 +565,63 @@ tox runs the tests we wrote for each of the versions of python specified in our 
 Tox and Code coverage
 ---------------------
 
-Previously we used code coverage with pytest to see how much of our code has been covered by tests.  We can do this in tox aswell.  All we have to do is add the `pytest` flags to the **testenv** **commands** line:
+.. https://pytest-cov.readthedocs.io/en/latest/tox.html
+
+Previously we used code coverage with pytest to see how much of our code has been covered by tests.  We can do this in tox aswell by adding the `--cov fibonacci` flag to `command = pytest` line in our tox.ini.
+
+One common problem people run into with pytest and tox is that `pytest-cov` will erase previous coverage data by default.  This is unwanted with `tox` as we want the combined coverage for multiple version (especially if we have lines of code that are only ran under certain versions).  To get the combined coverage we need to use `--cov-append`. As this will then keep the coverage data we need tox to clean up between runs, we can do this by creating a `[testenv:clean]` option and adding it to out `envlist`:
+
+
+..ignore the concept of parrallel, but see //pytest-cov.readthedocs.io/en/latest/tox.html if we plan to.
+
+.. code-block::
 
    # tox.ini
 		
    [tox]
-   envlist = py27, py35, py36, py37, py38
+   envlist = clean, py27, py35, py36, py37, py38
 
    [testenv]
    deps = -r{toxinidir}/requirements_test.txt
-     
    commands = pytest --cov fibonnaci
-   
+
+   [testenv:clean]
+   deps = coverage
+   skip_install = true
+   commands = coverage erase
+
 We can now run tox again and it will print out our coverage:
 
 .. code-block:: bash
 
    $ tox
+   ...
    
+   ----------- coverage: platform linux, python 3.8.0-final-0 -----------
+   Name                                                           Stmts   Miss  Cover
+   ----------------------------------------------------------------------------------
+   .tox/py27/lib/python2.7/site-packages/fibonacci/__init__.py        1      0   100%
+   .tox/py27/lib/python2.7/site-packages/fibonacci/fibonacci.py       9      0   100%
+   .tox/py36/lib/python3.6/site-packages/fibonacci/__init__.py        1      0   100%
+   .tox/py36/lib/python3.6/site-packages/fibonacci/fibonacci.py       9      0   100%
+   .tox/py37/lib/python3.7/site-packages/fibonacci/__init__.py        1      0   100%
+   .tox/py37/lib/python3.7/site-packages/fibonacci/fibonacci.py       9      0   100%
+   .tox/py38/lib/python3.8/site-packages/fibonacci/__init__.py        1      0   100%
+   .tox/py38/lib/python3.8/site-packages/fibonacci/fibonacci.py       9      0   100%
+   ----------------------------------------------------------------------------------
+   TOTAL                                                             40      0   100%
+   
+   
+   ================================ 3 passed in 0.09s ================================
+   ______________________________________ summary ____________________________________
+    clean: commands succeeded
+    py27: commands succeeded
+    py36: commands succeeded
+    py37: commands succeeded
+    py38: commands succeeded
+    congratulations :)
+
+The output above is truncated, but we can see that the list of files covered by the tests increase with each run as more files (in different virtual environments) are added to the coverage report.  You only need to have 100% coverage across all files, not in each one, to get 100% coverage.
    
 
    Tests and Continuous Integration
@@ -590,47 +629,60 @@ We can now run tox again and it will print out our coverage:
 
 .. redo with tox
 
-Now that we know how to test our code, we have to remember to do it often. One way to make this easier is to use Continuous Integreation (CI).  The easiest way to do this is by using tools built into by tools such as **github**. As always there are several ways to do this (Github or Gitlab as the provider, and TravisCI, Jenkins, CircleCI or GitLab, to name a few) but we have picked, and will describe one.  Our choice is Github with TravisCI.  When this is configured correctly, everytime you push changes to your Github repository, TravisCI will run your tests and let you know if they pass or not.
+We now have a python package that is installable, and has inbuilt tests and coverage reports - the later help build confidence in the packages reproducibility. We can ensure these tests are ran when we push our commits to github, this will give us confidence that our public code has always been tested, and show other users that its has been tested as well.
 
-Using Continuous Integration has many benefits. Not only is our code tested everytime we push to github, we can test on a variety of python versions and operating systems, without having to have access to a mchine with them - this gives us more confidence in our code, and whether it is reproducible.
+We ensure that these tests are ran through Continuous Integration (CI), whereby each time we push a commit to github, it triggers scripts to be ran against the code, or through something called webhooks, triggers external services to run scripts against our repository.
+
+We will look first at **TravisCI** which will use tox to test our code, and then codecov.io which will generate and host pretty code coverage reports for our code.
+
+TravisCI
+--------
+
 
 To use TravisCI we need to create an account with TravisCI, and grant it access to the repository that conatins your code.  To do this just go to `Travis CI <https://travis-ci.com/>`_ and sign up with your Github account.
 
-.. expand on this
+.. Add setting up travis on github and getting account
 
-We then need to create a `travis.yml` file in our project directory. Lets create a basic `travis.yml` that will test our code against python 3.6.
+TravisCI provides virtual machines that our package is built and ran on, this allows us to test against multiple versions of python, and against different operating systems.  We will also use an extra package called `tox-travis` which makes it easier to use tox and travis together.
 
+We specify what we want travis to run using the file `.travis.yml`:
 
 .. code-block:: python
-dist: xenial
 
-language: python
+   language: python
 
-python:
-  - "3.6"
+   python:
+     - "2.7"
+     - "3.5"
+     - "3.6"
+     - "3.7"
+     - "3.8"
 
-before_install:
-  - pip install -U pip
-  - pip install -U pytest
-  - pip install -U pytest-cov
-  
-install:
-  - pip install '.[test]' . # install our package and test dependencies.
+   install:
+     - pip install tox-travis
 
-script:
-  - pytest
-```
+   script:
+     - tox -vv
 
-Lets look at each part of the file.
+There are quite a few things specified here so lets look at them one at a time.
 
-* The first line states what operating system we want to use, in this case it is Ubuntu 16.04 (codenamed xenial)
+`language: python` specifies the programming language we will be using.
 
-* The `language` statement is the language we wish to use, in our case, python.
-* The third line lists what versions of python we want to test against.  We can specificy multiple versisons here, and out tests will be ran against each one. To begin with, we will just use python 3.6, denoted by the '3.6'.
+`python:` is a list of the python versions we want to run against.
 
-* The `before_install` statement is a list of commands we want to run before our package is installed for testing.
-  - `pip install -U pip` will upgrade the currently installed version of pip to the latest. Sometimes errors occur by not having the latest version.
-  - ` pip install -U pytest` will install and upgrade pytest.
+`install:` is a list of things we need installing before we can run.  As our package dependencies and test dependencies are already in `setup.py` and `tox.ini` we only need to specify one extra package which is tox-travis.  tox-travis is a package that makes running tox and travis together a little simpler and removes the need to type as much in the `.travis.yml` file.
+
+`script:` is a list of commands and scripts to run for each version of python.  In our case we just want to run tox; the `-vv` is enabling extra verbosity from tox, just incase we have errors.
+
+Now, each time we issue a `git push` and our commits are sent to github, these test will be ran.  We can tell everyone about how our tests are being passed by adding a badge to our README.md. The code we will need to add to our README.md will look similar to this:
+
+.. code-block::
+
+   [![Build Status](https://travis-ci.org/longr/cffi_example.svg?branch=master)](https://travis-ci.org/longr/cffi_example)
+
+You can get the badge for your package by going to:
+
+.. Add instructions on getting badge.
 
 .. extras_require   https://stackoverflow.com/questions/4734292/specify-where-to-install-tests-require-dependencies-of-a-distribute-setuptools/7747140#7747140
 
@@ -644,31 +696,42 @@ Lets look at each part of the file.
 Test coverage
 =============
 
+Now that we have tests working with continuous integration we can expand this to code coverage.  The first thing we need to do is signup for an account on `Codecov <https://codecov.io/>`_ which just requires us to log in with our GitHub account.  Then we have to add the relevant lines to our `.travis.yml` so that it looks like this:
+
+.. code-block:: python
+
+   language: python
+
+   python:
+     - "2.7"
+     - "3.5"
+     - "3.6"
+     - "3.7"
+     - "3.8"
+
+   install:
+     - pip install tox-travis codecov
+
+   script:
+     - tox -vv
+
+   after_success:
+     - codecov
+
+We have now added `codecov` as a dependency under `install:`, and a new section labelled `after_success`:`; this section contains the commands to run once all our `script:` jobs have been run successfully. We have added one entry, `codecov`.  As long as we have a public GitHub account, and a codecov.io account, this will send our coverage report to codecov.io.
+
+       
 `Pytest and coverage <https://stackoverflow.com/questions/21991765/how-to-generate-coverage-from-setup-py>`_
 
 `pytest import issues <http://doc.pytest.org/en/latest/pythonpath.html#pytest-vs-python-m-pytest>`_
 
-
-
-
-Codecov.io
-==========
-
-.. add tox
 `Codecov + python + travis <https://dev.to/j0nimost/using-codecov-with-travis-ci-pytest-cov-1dfj>`_
-
 `exclude files from codecov <https://docs.codecov.io/docs/codecov-yaml>`_
 `Codecov + python + travis beginners <https://medium.com/datadriveninvestor/beginners-guide-to-using-codecov-with-python-and-travis-ci-c17659bb711>`_
 `Codecov yaml <https://docs.codecov.io/docs/codecov-yaml>`_
 
 
-Testing against multiple versions
-=================================
-
-.. again, tox.
-
-Testing on multiple OS's
-------------------------
+.. Testing on multiple OS's
 
 `Testing Your Project on Multiple Operating Systems <https://docs.travis-ci.com/user/multi-os/>`_
 
