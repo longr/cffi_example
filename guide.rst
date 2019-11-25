@@ -299,7 +299,8 @@ fibonacci.fib(10)
 # 55
 ```
 
-NOTE: We will have to rebuild the source distribution, and reinstall it every time we make changes to our package. 
+.. NOTE::
+   We will have to rebuild the source distribution, and reinstall it every time we make changes to our package. 
 
 Build and distribute
 --------------------
@@ -309,6 +310,7 @@ Build and distribute
 If we are not wanting to distribute our package (yet), then we can skip the build step and let `pip` do this for us in a temporary directory and install it in one command.
 
 Again, from the root directory,
+
 ```bash
 pip install . --user
 ```
@@ -324,25 +326,27 @@ We can test this by making a quick change to our `fibonacci.py` file.
 
 If we don't care about quality or whether our software is sustainable, then we can skip to "Distributing our Package".  However, we should be concerned with this, and as this is primarily aimed at researchers, we need to be concerned with this. So read on to the next sections about how to ensure our software is sustainable, and our research is reproducible.
 
-Manifest
---------
-
-.. what does manifest protect against?
-
-Licence
--------
-
-.. Yes needed, add.
-
-Style Guide
------------
-
-.. Add these to documentation
-   
-Contributing
-------------
-
-.. Again, documentation
+#
+#Manifest
+#--------
+#
+#.. what does manifest protect against?
+#
+#Licence
+#-------
+#
+#.. Yes needed, add.
+#
+#Style Guide
+#-----------
+#
+#.. Add these to documentation
+#   
+#Contributing
+#------------
+#
+#.. Again, documentation
+#
 
 Testing with pytest
 ===================
@@ -411,7 +415,7 @@ The first thing we need to do is import the modules we need; at a minimum these 
 
 We then need to write our tests. Each test should begin with `test_`. Naming them like this ensures that **pytest** can find them. They should have a decriptive name that tells us what the test does, such as what function is called and what we are testing it for. The test function is then very simple. We can conduct many different tests in these functions, many of which are beyond the scope of this guide. We shall just look at assert for now.  `assert` will check that a conditional expression evaluates to `true`. In our case we have stated that `fibonnaci.fib(0) == 0`. When this function is run, a test will pass if the conditional evaluates to true.
 
-
+# Removed integration with setuptools as this is being depreciated and does not work properly.
 Integration with setuptools
 ---------------------------
 
@@ -675,7 +679,7 @@ Code Quality with Black
 =======================
 
 `Black - code style <https://github.com/python/black>`_
-
+ Use flag `--skip-string-normalization` as black swaps to double which is harder to read.
 
 Uploading to PiPy with CI
 =========================
