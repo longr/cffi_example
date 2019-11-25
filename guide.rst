@@ -416,76 +416,7 @@ The first thing we need to do is import the modules we need; at a minimum these 
 We then need to write our tests. Each test should begin with `test_`. Naming them like this ensures that **pytest** can find them. They should have a decriptive name that tells us what the test does, such as what function is called and what we are testing it for. The test function is then very simple. We can conduct many different tests in these functions, many of which are beyond the scope of this guide. We shall just look at assert for now.  `assert` will check that a conditional expression evaluates to `true`. In our case we have stated that `fibonnaci.fib(0) == 0`. When this function is run, a test will pass if the conditional evaluates to true.
 
 # Removed integration with setuptools as this is being depreciated and does not work properly.
-Integration with setuptools
----------------------------
 
-We can integrate `pytest` with setuptools; this will allow setuptools to download pytest if needed, and build the package first if this is needed.  To do this we need to create a file called `setup.cfg` with the following contents:
-
-```bash
-[aliases]
-test=pytest
-```
-
-This tells setuptools to call pytest instead of the default test. To run our tests we now call the command:
-
-```bash
-python setup.py test
-```
-
-We can run pytest with extra arguments, such as `--verbose` which will print out more information about our tests.  We could just type this on the command line as `pytest --verbose`, but since we have already integreated pytest into setuptools, we should add this flag to `setup.cfg` - lets edit it and add a few extra lines.
-
-```bash
-[aliases]
-test=pytest
-
-[tool:pytest]
-addopts = --verbose
-```
-
-We also need to update `setup.py` to let it know that our package depends on `pytest` for running tests. This will mean that it can download and install `pytest` if needed.  We just need to add one line `tests_require=["pytest"],` if we need other packages for running our tests that are not already required by our package, we need to include them here. `tests_requires` takes a python list of strings. Our setup.py should now look like this:
-
-.. code-block:: python
-from setuptools import setup, find_packages
-
-setup(
-    name="fibonacci",
-    version="0.1",
-    author="Robin Long",
-    author_email="robin.long1@hotmai.co.uk",
-    url="https://github.com/longr/python_packaging_example",
-    description="A simple package containing a single module with a single function that finds the nth fibonacci number.",
-    packages=find_packages(where="src"),
-    package_dir={"":"src"},
-    install_requires=[""],
-    tests_requires=["pytest"],
-)
-```
-
-Now when we run the tests we get more information
-
-```bash
-$ python3 setup.py test
-running pytest
-running egg_info
-writing src/fibonacci.egg-info/PKG-INFO
-writing dependency_links to src/fibonacci.egg-info/dependency_links.txt
-writing top-level names to src/fibonacci.egg-info/top_level.txt
-reading manifest file 'src/fibonacci.egg-info/SOURCES.txt'
-writing manifest file 'src/fibonacci.egg-info/SOURCES.txt'
-running build_ext
-
-========================================== test session starts ==========================================
-platform linux -- Python 3.7.5, pytest-5.2.1, py-1.8.0, pluggy-0.12.0 -- /usr/bin/python3
-cachedir: .pytest_cache
-rootdir: /home/user/python_packaging_example, inifile: setup.cfg
-plugins: flakes-4.0.0, cov-2.8.1, pep8-1.0.6
-collected 1 item                                                                                        
-
-tests/test_fibonacci.py::test_fib_check_zero PASSED                                               [100%]
-
-=========================================== 1 passed in 0.02s ===========================================
-
-As we can see, the package is built first, and then the tests are ran.  We also get more detail now, and instead of a dot ('.') representing each function, each function is named and put on a separate line.
 
 .. init.py in tests
 .. Use hypothesis?
@@ -544,37 +475,117 @@ pytest --cov=fibonacci --cov-report html
 
 This will generate a report in html format in a directory called `htmlcov`.  We can view this by opening `htmlcov/index.html` in a web browser.
 
-We can add these options into our `setup.cfg` file so that a coverage report is always generated when we run `python setup.py test` by adding the flag `--cov fibonacci` to `addopts`:
+Better testing with Tox
+=======================
+
+Currently we run our tests by just calling `pytest` on the command line.  If we use virtual enviroments, we can have some increased confidence in our code and tests as we know what package dependencies have been installed.  What happens when we need new packages in our tests, did we document this? What if we want to test against another version of python?  We can do all this with virtual enviroments, but `tox` makes this easier.
+
+Stolen from their own documentation, tox is a generic virtualenv management and test command line tool you can use for:
+
+- checking your package installs correctly with different Python versions and interpreters
+- running your tests in each of the environments, configuring your test tool of choice
+- acting as a frontend to Continuous Integration servers, greatly reducing boilerplate and merging CI and shell-based testing.
+
+All of this makes tox a great tool and key one to use.
+
+Configuring Tox
+---------------
+
+After some initialisation, tox will make running our tests easier and simpler.  Firstly we need to install tox, with pip the command is:
+
+.. code-block:: bash
+
+   pip install tox
+
+   
+Then we need to put information about our project into a file called `tox.ini`, this tells tox which tests we want to run, and which versisons of python to run those tests against.
 
 .. code-block:: python
-[aliases]
-test=pytest
 
-[tool:pytest]
-addopts = --verbose
-          --cov fibonacci
-```
- 
-We should also update the `tests_require` line in `setup.py` as this now requires `pytest-cov`. `setup.py` should now look like this:
+   # tox.ini
+		
+   [tox]
+   envlist = py27, py35, py36, py37, py38
+
+   [testenv]
+   deps = -r{toxinidir}/requirements_test.txt
+     
+   commands = pytest
+
+Lets look at this file in detail.  First we have `[tox]` which will contain the global options we want to configure for tox.  The only option we have specified here is `envlist`, and we have listed five versions of python we wish to test against. Notice that these are abbreviated to **py** and the major and minor version numbers without a decimal point; as such python 3.6 becomes py36.
+
+The next section, `[testenv]`, specifies the options we want in our test environment. Tox will install our package inside the virtual environment, and will pickup the dependencies from `setup.py`; however, `setup.py`, does not contain information on the dependencies for our test environment, so we need to speciy these separatly.  Using the DRY (Don't Repeat Yourself), the best way to specify this is using a requirements file to list the dependencies for running our tests.  We shall use a file called `requirements_test.txt` to list our depdencies. This file will contain each dependency on a separate line and should look like this for our package:
 
 .. code-block:: python
-from setuptools import setup, find_packages
 
-setup(
-    name="fibonacci",
-    version="0.1",
-    author="Robin Long",
-    author_email="robin.long1@hotmai.co.uk",
-    url="https://github.com/longr/python_packaging_example",
-    description="A simple package containing a single module with a single function that finds the nth fibonacci number.",
-    packages=find_packages(where="src"),
-    package_dir={"":"src"},
-    install_requires=[""],
-    tests_requires=["pytest","pytest-cov"],
-)
-```
+   pytest
+   pytest-cov
 
-Tests and Continuous Integration
+This file should be located in our packages root file (where our setup.py file is located).  We can then tell tox about it by using `-r{toxinidir}/requirments_test.txt`. `{toxinidir}` is a tox variable which evalulates to the directory that the `tox.ini` file is located in (this is useful to ensure paths are correct).  Also note the lack of a space between `-r` and `{toxinidir}/requirements_test.txt`.
+   
+The final part of the `tox.ini` file is the `commands` line, here we need to specify the command we wish to use to run our tests, in this case it is `pytest`.
+
+Running Tox
+-----------
+
+We can run our tests by calling `tox` on the command line:
+
+.. code-block:: bash
+
+   $ tox
+   ...
+   py38 inst-nodeps: /home/longr/Public/PyCFFI/python_packaging_example/.tox/.tmp/package/1/fibonacci-0.1.zip
+   py38 installed: attrs==19.3.0,coverage==4.5.4,fibonacci==0.1,more-itertools==7.2.0,packaging==19.2,pluggy==0.13.1,py==1.8.0,pyparsing==2.4.5,pytest==5.3.0,pytest-cov==2.8.1,six==1.13.0,wcwidth==0.1.7
+   py38 run-test-pre: PYTHONHASHSEED='545188176'
+   py38 run-test: commands[0] | pytest
+   =============================== test session starts ==================================
+   platform linux -- Python 3.8.0, pytest-5.3.0, py-1.8.0, pluggy-0.13.1
+   cachedir: .tox/py38/.pytest_cache
+   rootdir: /home/longr/Public/PyCFFI/python_packaging_example
+   plugins: cov-2.8.1
+   collected 3 items
+   
+   tests/test_fibonacci.py ...                                                     [100%]
+
+   ============================== 3 passed in 0.03s =====================================
+   ___________________________________ summary __________________________________________
+   py27: commands succeeded
+   py36: commands succeeded
+   py37: commands succeeded
+   py38: commands succeeded
+   congratulations :)
+
+tox runs the tests we wrote for each of the versions of python specified in our `tox.ini`; Note that in the above output, we have truncated the output and shown the tests being run against the last version of python only.
+
+.. warning::
+
+   You may get errors when trying to run this on your own system.  This will because the various implementations are python will not be installed. By default only one version of python3 is installed.  To solve this we can ask tox to run against a single implementation by calling `tox -e <python_enviroment>`.  To run only python 3.7 we would call `tox -e py37`.
+
+   
+Tox and Code coverage
+---------------------
+
+Previously we used code coverage with pytest to see how much of our code has been covered by tests.  We can do this in tox aswell.  All we have to do is add the `pytest` flags to the **testenv** **commands** line:
+
+   # tox.ini
+		
+   [tox]
+   envlist = py27, py35, py36, py37, py38
+
+   [testenv]
+   deps = -r{toxinidir}/requirements_test.txt
+     
+   commands = pytest --cov fibonnaci
+   
+We can now run tox again and it will print out our coverage:
+
+.. code-block:: bash
+
+   $ tox
+   
+   
+
+   Tests and Continuous Integration
 ================================
 
 .. redo with tox

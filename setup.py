@@ -3,6 +3,9 @@
 
 from setuptools import setup, find_packages
 
+with open('requirements.txt') as file:
+    requirements = file.read().splitlines()
+
 setup(
     name="fibonacci",
     version="0.1",
@@ -12,6 +15,7 @@ setup(
     description="A simple example package.",
     packages=find_packages(where="src"),
     package_dir={"": "src"},
+    install_requires=requirements,
     tests_require=["pytest"],
     extras_require={"testing": ["pytest", "pytest-cov"]},
 )
