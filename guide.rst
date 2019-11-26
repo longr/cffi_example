@@ -740,28 +740,21 @@ We have now added `codecov` as a dependency under `install:`, and a new section 
 Documentation
 =============
 
-https://realpython.com/documenting-python-code/
+.. Add description of how to document and different types
+
+.. https://realpython.com/documenting-python-code/
+
+One of the main tasks we need to do for our project, and the most over looked is to document it.  As usual, there are many ways to do this, but only one that we will look at.  We will use a python program called **sphinx**, which converts reStructuredText (.rst) files into our choice of html, pdf, and epub.  We can choose to do all or some of these.
+
+Lets start by creating a folder called
 
 
-CI and Docs
-===========
+Automatic Documentation
+-----------------
 
-Read the docs
--------------
+Sphinx also has very helpful plugins that allow us to automatically generate API, documentation for the docstrings in our code. This means that users will be able to quickly access information on the functions contained with in our code and how to use them.
 
-Code Quality with Black
-=======================
-
-`Black - code style <https://github.com/python/black>`_
- Use flag `--skip-string-normalization` as black swaps to double which is harder to read.
-
-Uploading to PiPy with CI
-=========================
-
-`Upload to PyPi <https://gist.github.com/gboeing/dcfaf5e13fad16fc500717a3a324ec17>`_
-
-
-
+.. which first User, or guide?  Guide as depends on user.
 
 Documenting your project
 ========================
@@ -790,7 +783,6 @@ Main note on docs is need to add modules.rst to index.rst or somewhere so it is 
    https://tox.readthedocs.io/en/latest/example/documentation.html
 
    https://medium.com/@eikonomega/getting-started-with-sphinx-autodoc-part-1-2cebbbca5365
-   https://alexgaynor.net/2010/dec/17/getting-most-out-tox/
    https://alexgaynor.net/2010/dec/17/getting-most-out-tox/
    https://github.com/Syntaf/travis-sphinx
    https://ofosos.org/2019/01/06/doctest-travis/
@@ -845,78 +837,29 @@ Main note on docs is need to add modules.rst to index.rst or somewhere so it is 
 # https://github.com/tox-dev/tox-travis/blob/master/.travis.yml
 # 
 
-
-
-
-##works
-#[testenv:html]
-#basepython = python3.6
-#whitelist_externals = make
-#commands =
-#    make -C docs html BUILDDIR={envdir} "SPHINXOPTS=-W -E"
-
-#[testenv:linkcheck]
-#basepython = python3.6
-#whitelist_externals = make
-#commands =
-#    make -C docs linkcheck BUILDDIR={envdir} "SPHINXOPTS=-W -E"
-
-# This will do doctest
-[testenv:doctest]
-basepython = python3.6
-whitelist_externals = make
-commands =
-    make -C docs doctest BUILDDIR={envdir} "SPHINXOPTS=-W -E"
-
-#[testenv:epub]
-#basepython = python3.6
-#whitelist_externals = make
-#commands =
-#    make -C docs epub BUILDDIR={envdir} "SPHINXOPTS=-W -E"
-
-#[testenv:pdf]
-#basepython = python3.6
-#whitelist_externals = make
-#commands =
-#    make -C docs latexpdf BUILDDIR={envdir} "SPHINXOPTS=-W -E"
-
-
 LOOK at this: https://github.com/Pylons/pyramid/blob/master/docs/Makefile
 
 Pyramids is gold standard for sphinx.  They have modifed make file, consider doing the same to allow build.    Also perhaps remove travis-tox?? to confusing and hides things?
 
+CI and Docs
+===========
+
+Read the docs
+-------------
+
+Code Quality with Linters
+=========================
+
+`Black - code style <https://github.com/python/black>`_
+ Use flag `--skip-string-normalization` as black swaps to double which is harder to read.
+
+Uploading to PiPy with CI
+=========================
+
+`Upload to PyPi <https://gist.github.com/gboeing/dcfaf5e13fad16fc500717a3a324ec17>`_
 
 
-Linux
------
-OSX
----
-Windows
--------
-
-Extending Python with C
-=======================
-Should this be a separate thing?
-
-
-.. dont forget github tags and readmes.
-   should we discuss github and uses?
-
-
-.. https://github.com/pandas-dev/pandas  good readme layout
-..      https://github.com/pandas-dev/pandas
-.. https://github.com/yanqd0/csft
-.. https://github.com/google/yapf/blob/master/README.rst
-   https://sphinx-rtd-tutorial.readthedocs.io/en/latest/docstrings.html
-
-
-
-
-
-
-
-
-
+.. Do we need to talk about MANINFEST.ini and packaging data with projects?
 
 .. What does what
 
@@ -932,5 +875,5 @@ Should this be a separate thing?
    developer guide - how it works
    contributor guide - how to help
    licence - how it can be used
-http://graphviz.org/
-https://blog.codinghorror.com/code-tells-you-how-comments-tell-you-why/
+   http://graphviz.org/
+   https://blog.codinghorror.com/code-tells-you-how-comments-tell-you-why/
