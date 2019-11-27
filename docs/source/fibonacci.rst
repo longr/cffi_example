@@ -1,22 +1,5 @@
-fibonacci package
-=================
-
-Submodules
-----------
-
-fibonacci.fibonacci module
---------------------------
+Module API for Fibonacci
+========================
 
 .. automodule:: fibonacci.fibonacci
     :members:
-    :undoc-members:
-    :show-inheritance:
-
-
-Module contents
----------------
-
-.. automodule:: fibonacci
-    :members:
-    :undoc-members:
-    :show-inheritance:

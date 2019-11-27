@@ -746,16 +746,271 @@ Documentation
 
 One of the main tasks we need to do for our project, and the most over looked is to document it.  As usual, there are many ways to do this, but only one that we will look at.  We will use a python program called **sphinx**, which converts reStructuredText (.rst) files into our choice of html, pdf, and epub.  We can choose to do all or some of these.
 
-Lets start by creating a folder called
+The first things we need to do is create a directory to store our documentation in, by convention this should be called `docs`. We then need to `cd` into this directory and set it up.
 
+.. code-block:: bash
+
+   $ mkdir docs
+   $ cd docs
+
+We will need to install sphinx before we can go any further with setting up our documentation. We do this using pip:
+
+.. code-block:: bash
+
+   $ pip install sphinx
+
+Then we can setup our documentation. Sphinx needs a configuration file named `conf.py` and a few additional files for building the documentation.  We can generate all of these using a command called `sphinx-quickstart`. There are two ways to do this, and both result in the same setup. We can run the command by itself and it will ask us questions that we need to enter; some of these need specific answers, and for others we can use the default options. To do this, just type `sphinx-quickstart` from inside the `docs` directory, and accept the default answers (by pressing *enter*) except for the following (answers in bold):
+
+* `Separate source and build directories (y/n) [n]:` **y**
+* `Project name:` Enter the name of the project, this should be the same name as we used for our package, in this case **fibonacci**.
+* `Author name(s):` This wants to be the author(s) names, for me that is 'Robin Long'
+* `Project release`: This is the current version of the project, 0.1 for example.
+* `Project language`: This is what language the project is in, the default in **en** (english)
+* `Source file suffix [.rst]`: This is the file extention for any files we want included in our documentation, the default (**rst**) is correct.
+* `Name of your master document (without suffix) [index]`: Accept the default here, this is the name of main file that all others will be linked from.
+
+There will be a series of questions now, where the default answer will be no, it is fine to just accept these.
+
+* `Create Makefile? (y/n) [y]`: This will create a Makefile making it easier to build the documentation, the default **y** is correct.
+* `Create Windows command file? (y/n) [y]`: This is the same, but for windows, accepting the default is fine.
+
+This should create a directory stucture that looks like this:
+
+.. code-block:: bash
+
+   docs/
+   ├── build
+   ├── conf.bk
+   ├── make.bat
+   ├── Makefile
+   └── source
+       ├── conf.py
+       ├── index.rst
+       ├── _static
+       └── _templates
+
+.. NOTE::
+   If you want to avoid going through all those prompts, the same can be achieved with a long command line. Remember to replace project name (`-p`), author (`-a`), release (`-r`) and version (`-v`). If needed also replace language (`-l`). 
+   `sphinx-quickstart -p 'fibonacci'  -a 'Robin Long' -v '0.1' -r '0.1' --makefile -q --sep -l en
+     
+Before we go any further we should make some changes to the default configuration file, `source/conf.py`.  We need to uncomment the following lines:
+
+.. code-block:: python
+
+   #import os
+   #import sys
+   #sys.path.insert(0, os.path.abspath('.'))
+
+and add in the correct path to our python module so that is now reads:
+
+.. code-block:: python
+		
+   import os
+   import sys
+   sys.path.insert(0, os.path.abspath('../../src/'))
+
+
+.. NOTE::
+   The path `../../src` is a relative path from the `conf.py` file is, which should be `<root_project_dir>/docs/source/`; to where our package is which should be `<root_project_dir>/src`.
+
+The next thing we need to do (which is encouraged, but optional) is change the theme to one that is a lot nicer. Just find the line beginning `html_theme` and change it from:
+
+.. code-block:: python
+
+   html_theme = 'alabaster'
+
+to
+
+.. code-block:: python
+
+   html_theme = 'sphinx_rtd_theme'
+
+Using this theme will require an extra package to be installed. From within our virtual environment we do:
+
+.. code-block:: bash
+
+   $ pip install sphinx_rtd_theme
+
+   
+   
+Building the documentation
+--------------------------
+
+Now that we have setup the documentation we want to test it compiles and build it.  We can do this using the make file. There are several options that we can pass to the make file depending upon what output we would like, generally we will want the output to be a webpage, a pdf file, or an epub file.  We can build these by passing the relevant option. To build the documentation as a webpage, from our root project directory, do the following:
+
+.. code-block:: bash
+
+   $ make -C docs html
+
+`-C docs` tells `make` to change to the `docs` directory before building and `html` tells it we want to build a webpage as the output. The webpage will be built in `docs/build/html`. We can view the page by opening `docs/build/html/index.html`.  On linux this is done on the command line using one of the following:
+
+.. code-block:: bash
+
+   $ # Google Chrome
+   $ google-chrome docs/build/html/index.html
+   $ # Firefox
+   $ firefox docs/build/html/index.html
+
+It would be better, if like the testing, we build our documentation in a virtual enviroment so that when we distribute our package it will be clear how to build, and we can be sure it works.
+
+First lets edit `setup.py` to let it know what dependencies we need for building the documentation:
+
+* We need to add a list containing the required packages.
+* Add a key value pair to `extras_requires` linking the packages to a name.
+
+Our `setup.py` should now look like this (some lines ommitted)
+
+.. code-block:: python
+		:empasize-lies: 13,14,15,29
+   #!/usr/bin/env python
+   # -*- coding: utf-8 -*-
+
+   from setuptools import setup, find_packages
+
+   install_requires = []
+
+   tests_require = [
+       'pytest',
+       'pytest-cov',
+   ]
+
+   docs_require = [
+       'sphinx',
+       'sphinx_rtd_theme',
+   ]
+
+   setup(
+       name="fibonacci",
+       version="0.1",
+       author="Robin Long",
+       author_email="robin.long1@hotmai.co.uk",
+       url="https://github.com/longr/python_packaging_example",
+       description="A simple example package.",
+       packages=find_packages(where="src"),
+       package_dir={"": "src"},
+       install_requires=install_requires,
+       tests_require=tests_require,
+       extras_require={'testing': tests_require,
+		       'docs': docs_require,},
+   )
+
+.. NOTE::
+   Adding key-value pairs to `extras_requires` means that we have optional packages that can be installed using pip by calling `pip install package[optional]`, for our package, `fibonacci`, this would be `pip install fibonacci[docs]`.
+
+Now that we have added the dependencies needed for our documentation to `setup.py` we can add an entry in tox to build the docs in a virtual enviroment. We just need to add these extra configurations to the end of our tox.ini file:
+
+.. code-block:: python
+
+   [testenv:docs]
+   basepython = python3
+   whitelist_externals = make
+   extras =
+       docs
+   commands =
+       make -C docs html "SPHINXOPTS=-W -E"
+
+This is similar to what we have before. The firstline, `basepython = python3` insturcts tox to build the documentation under python3 (instead of python2). For any external command (outside of python) that we wish to use we need to whitelist it; we do this as `whitelist_externals = make`. The next two are similar to what we have seen before: **extras** is the key from `setup.py`; **commands** is the command needed to build the documentation that we used previously. The main difference is that we have added `"SPHINXOPTS=-W -E". These pass extra flags to the sphinx-build command. `-W` turns warnings into errors, this prevents us building when we have warnings. `-E` forces sphinx to re-read all files for each build.
+
+We can now build our documentation with tox:
+
+.. code-block:: bash
+
+   tox -e docs
+
+We can add more options to tox for the different kinds of documentation we want to produce. We just need to change the env name (the text after `testenv:`) and the output type for sphinx.  Here is pdf and epub (note, pdf requires latex to be installed).
+
+.. code-block:: python
+
+   [testenv:pdf]
+   basepython = python3
+   whitelist_externals = make
+   extras =
+       docs
+   commands =
+       make -C docs pdflatex "SPHINXOPTS=-W -E"
+
+   [testenv:epub]
+   basepython = python3
+   whitelist_externals = make
+   extras =
+       docs
+   commands =
+       make -C docs epub "SPHINXOPTS=-W -E"
+
+If we wished, we could build all in one go with:
+
+.. code-block:: python
+
+   [testenv:pdf]
+   basepython = python3
+   whitelist_externals = make
+   extras =
+       docs
+   commands =
+       make -C docs pdflatex html epub "SPHINXOPTS=-W -E"
+
+   
+Writing Documentation in Sphinx
+-------------------------------
+
+We can now create our documentation.  Everything should be written in `.rst` files in `docs/source/`.
+
+.. Add reST primer.
+
+.. Discuss types of documenation?
+.. https://brandons-sphinx-tutorial.readthedocs.io/en/latest/quick-sphinx.html
 
 Automatic Documentation
------------------
+-----------------------
 
 Sphinx also has very helpful plugins that allow us to automatically generate API, documentation for the docstrings in our code. This means that users will be able to quickly access information on the functions contained with in our code and how to use them.
 
+To use this, we need to tell sphinx which extentions to use. We can do this by editting the following line in `docs/source/conf.py` to look like this:
+
+.. code-block:: python
+
+   extensions = [
+    'sphinx.ext.autodoc',
+    'sphinx.ext.napoleon',
+]
+
+* `sphinx.ext.autodoc` is the extention that will build the API documentation
+* `sphinx.ext.napoleon` enables autodoc to understand numpy style doc strings which are easier to read.
+
+Whilst we said the documentation is generated automatically we do need to do a little work; we have to tell sphinx which modules to automatically document. We do this be creating a file called `docs/source/fibonacci.rst` (named after our package) with the following lines in it:
+
+.. code-block:: python
+
+   .. automodule:: fibonacci.fibonacci
+      :members:
+
+We then need to link to this from `index.rst`. The simplest way is to put it into the contents of `index.rst`. Edit `index.rst` so that the contents now shows:
+
+.. code-block:: rest
+
+   .. toctree::
+      :maxdepth: 2
+      :caption: Contents:
+      
+      fibonacci
+
+Be very careful about the indentation. We call the file by its name without `.rst` on the end, but we must ensure its indent is correct.
+
+Now when we use the `make` command, or more correctly use `tox -e docs` to build our documentation it will build the API documentation as well.
+
+.. INFORMATION::
+   As our project progress it might make sense to split this into more files; perhaps one called `modules.rst` which links to all the others with one `.rst` file per module/sub-module.
+
 .. which first User, or guide?  Guide as depends on user.
 
+
+Testing documentation with Doctest
+----------------------------------
+
+.. Should we do pytest --doctest-modules??  http://doc.pytest.org/en/latest/doctest.html
+
+
+   
 Documenting your project
 ========================
 
@@ -837,7 +1092,7 @@ Main note on docs is need to add modules.rst to index.rst or somewhere so it is 
 # https://github.com/tox-dev/tox-travis/blob/master/.travis.yml
 # 
 
-LOOK at this: https://github.com/Pylons/pyramid/blob/master/docs/Makefile
+.. LOOK at this: https://github.com/Pylons/pyramid/blob/master/docs/Makefile
 
 Pyramids is gold standard for sphinx.  They have modifed make file, consider doing the same to allow build.    Also perhaps remove travis-tox?? to confusing and hides things?
 
