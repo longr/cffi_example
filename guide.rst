@@ -861,7 +861,8 @@ First lets edit `setup.py` to let it know what dependencies we need for building
 Our `setup.py` should now look like this (some lines ommitted)
 
 .. code-block:: python
-		:empasize-lies: 13,14,15,29
+   :emphasize-lines: 13,14,15,29
+		    
    #!/usr/bin/env python
    # -*- coding: utf-8 -*-
 
@@ -1006,6 +1007,139 @@ Now when we use the `make` command, or more correctly use `tox -e docs` to build
 
 Testing documentation with Doctest
 ----------------------------------
+
+Sphinx has another extention which is very useful called **doctest**. This allows us to test the example code in our docstrings, and in our general documentation to see if the presented output is correct.  To enable this we need to add another extension to `docs/source/conf.py`. In `conf.py` find where the python list `extensions` is defined and add `sphinx.ext.doctest` so that is looks like the following:
+
+.. code-block:: python
+
+   extensions = [
+       'sphinx.ext.autodoc',
+       'sphinx.ext.napoleon',
+       'sphinx.ext.doctest',
+   ]
+
+We then need to add a new tox environment to be able to run this extension.  Add the following environment to your `tox.ini`:
+
+
+.. code-block:: python
+
+   [testenv:doctest]
+   basepython = python3
+   whitelist_externals = make
+   extras = docs
+   commands = make -C docs doctest "SPHINXOPTS=-W -E"
+		
+This is very similar to what we had for building our documentation except that `make` now has `doctest` as the target.  As ususal we can run this by calling tox.
+
+.. code-block:: bash
+
+   $ tox -e doctest
+   $ tox -e doctest
+   ...
+   lines removed
+   ...
+   Running Sphinx v2.2.1
+   building [mo]: targets for 0 po files that are out of date
+   building [doctest]: targets for 2 source files that are out of date
+   updating environment: [new config] 2 added, 0 changed, 0 removed
+   reading sources... [ 50%] fibonacci
+   reading sources... [100%] index
+   
+   looking for now-outdated files... none found
+   pickling environment... done
+   checking consistency... done
+   running tests...
+   
+   Doctest summary
+   ===============
+       0 tests
+       0 failures in tests
+       0 failures in setup code
+       0 failures in cleanup code
+   build succeeded.
+
+   Testing of doctests in the sources finished, look at the results in build/doctest/output.txt.
+
+We can see that this succeeds, 0 test are found, and 0 failed.  Great! now lets add some tests. `doctest` assumes that anywhere it sees `>>>` in docstrings or documentation, is a python prompt it should test. It will look for code snippets that look like this:
+
+.. code-block:: python
+
+   >> 4+9
+   13
+
+`doctest` will assume that `4+9` is python code as the line starts with `>>>`, and that the next line is the expected output since it does not start with `>>>`.
+
+Lets try adding an example to our fibonacci functions docstring.  Open up `fibonacci.py` and add an example to the end of our docstring so it now reads:
+
+.. code-block:: python
+   :emphasize-lines: 17-23
+		
+   """
+   Calculates the value of the nth fibonnaci number.
+   
+   Function takes a single input, n, the nth fibonacci number, and returns
+   its value.
+   
+   Parameters
+   ----------
+   n : int
+       nth fibonacci number
+   
+   Returns
+   -------
+   int
+       The value of the nth fibonacci number.
+   
+   Examples
+   --------
+   Get the value of the 10th fibonacci number
+   
+   >>> import fibonacci
+   >>> fibonacci.fib(10)
+   55
+   
+   """
+
+We now have a docstring with a piece of example code. We can test this by calling tox:
+
+
+.. code-block:: bash
+
+   $ tox -e doctest
+   ...
+   lines removed
+   ...
+   looking for now-outdated files... none found
+   pickling environment... done
+   checking consistency... done
+   running tests...
+   
+   Document: fibonacci
+   -------------------
+   1 items passed all tests:
+      2 tests in default
+   2 tests in 1 items.
+   2 passed and 0 failed.
+   Test passed.
+
+   Doctest summary
+   ===============
+       2 tests
+       0 failures in tests
+       0 failures in setup code
+       0 failures in cleanup code
+   build succeeded.
+
+   Testing of doctests in the sources finished, look at the results in build/doctest/output.txt.
+   make: Leaving directory '/home/longr/Public/PyCFFI/python_packaging_example/docs'
+  __________________________________________________ summary _________________________________________________
+  doctest: commands succeeded
+  congratulations :)
+
+Hopefully our "tests" passed, you could try changing the output to another number to see how it fails.
+   
+
+.. https://medium.com/@eikonomega/getting-started-with-sphinx-autodoc-part-1-2cebbbca5365
 
 .. Should we do pytest --doctest-modules??  http://doc.pytest.org/en/latest/doctest.html
 
