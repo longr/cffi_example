@@ -2,6 +2,21 @@
 Python Packaging Example
 ========================
 
+.. TODO::
+   * Zenodo and DOI
+   * Upload to PyPi
+   * Build on windows + mac
+   * ORCID
+   * GIT Hub instructions
+   * ReadTheDocs
+   * pyproject.toml
+   * README.md badges:
+     * Download (Github / PyPi)
+     * Tests
+     * Coverage
+     * Docs
+       
+
 We shall build sustainable software with Python, Setuptools(setup.py). We will test this with PyTest and Tox(tox.ini), and test coverage with pytest-cov. Further more we will introduce Conitinuous intereation with travis.
 
 We will then document our code with Sphinx, automatically document our functions with docstrings and autodoc. We will then test any examples automatically with doctest.

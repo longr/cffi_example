@@ -45,6 +45,10 @@ extensions = [
     'sphinx.ext.todo',
 ]
 
+# Set to true to display todo's in rendered text.
+[extensions]
+todo_include_todos=True
+
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
