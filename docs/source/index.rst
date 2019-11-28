@@ -18,3 +18,13 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
+
+
+How this was made
+=================
+
+.. toctree::
+   :caption: Guide to creating this package
+   :maxdepth: 2
+
+   guide.rst
