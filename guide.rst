@@ -2,26 +2,9 @@
 Python Packaging Example
 ========================
 
+We shall build sustainable software with Python, Setuptools(setup.py). We will test this with PyTest and Tox(tox.ini), and test coverage with pytest-cov. Further more we will introduce Conitinuous intereation with travis.
 
-Layout
-Packaging (setup.py)
-Testing (Pytest) (setup.cfg)
-Coverage (Pytest-cov) (setup.cfg)
-Testing with CI (Pytest + Travis) (setup.cfg, .travis.yml)
-Coverage with CI (Pytest + Travis + Codecov.io) (setup.cfg, .travis.yml, .codecov.yml?)
-
-With tox
-
-Testing (Pytest)
-Testing in Venv (Pytest + tox) (tox.ini)
-Coverage (Pytest-cov) (tox.ini)
-Testing with CI (Pytest + Travis) (tox.ini, .travis.yml)
-Coverage with CI (Pytest + Travis + Codecov.io) (tox.ini, .travis.yml, .codecov.yml?)
-
-
-Should we push tox?  Seems problematic and overkill. Not sure I like it.  Needed, realised after tinkering that it is useful and needed.
-
-Then need to look at Docs. Using Sphinx, sphinx-apidoc and doctest - might be others to look at.
+We will then document our code with Sphinx, automatically document our functions with docstrings and autodoc. We will then test any examples automatically with doctest.
 
 
 Introduction
@@ -35,14 +18,6 @@ In the following tutorial we will build a package named `fibonacci` that contain
 
 Modules and Packages
 ===================
-
-.. how to import
-.. different way (from X import Y, import X, import X.Y) and how to access modules.
-.. redo this with specific test package instead of fictional my_module.
-   
-
-.. In python modules are just python, `.py`, files. Packages are collections of modules in a directory with an `__init__.py` file in it.  
-.. Could this be written less formally?
 
 In python a module is a single python file ending in `.py` that can be imported using the command `import`. Each module has its own namespace, this means that functions in this module can call each other without having to reference the modules file name. Outside of the module, such as when we import it, the module name needs to be used when calling the a function in the file, such as in the example below.
 
@@ -64,11 +39,10 @@ A package is a way of collecting several modules together under another common n
 
 Here we have a package named `my_package` which contains two modules imaginitivly named `module_01` and `module_02`.  When `my_package` is imported we will need to call the full function name such as `my_package.module_01.function()`.  However functions in each module only need to call the module name followed by the function such as `module_01.function()`.  
 
-.. `RealPython Packages and Modules <https://realpython.com/python-modules-packages/>`_
-
-.. `Packaging - PyPi <https://the-hitchhikers-guide-to-packaging.readthedocs.io/en/latest/contributing.html>`_
-
-.. `Glossary <https://packaging.python.org/glossary/>`_
+.. NOTE::
+   * `RealPython Packages and Modules <https://realpython.com/python-modules-packages/>`_
+   * `Packaging - PyPi <https://the-hitchhikers-guide-to-packaging.readthedocs.io/en/latest/contributing.html>`_
+   * `Glossary <https://packaging.python.org/glossary/>`_
 
 Package Layout
 ==============
@@ -120,99 +94,94 @@ we will then need to create an `__init__.py` to turn our directory with a module
 
 `__init__.py` file
 .. code-block:: python
-import fibonacci
-```
+   
+   import fibonacci
+
 
 Importing modules
 -----------------
 
 To test our package we can now import it. Since our package is located inside the `src` directory we cannot just import it as `import fibonacci` and as `src` does not contain and `__init__.py` we cannot import that either.  We need to move into the `src` directory (this is only needed for this quick test and example. In the next section we will create a `setup.py` file that will allow us to install our package so we don't have to be in the `src` directory.
 
-```bash
-cd src/
-ipython
-```
+.. code-block:: bash
+
+   $ cd src/
+   $ ipython
 
 In the command above we move into the `src` directory and then start python.  We could use just `python` but the tab completion and other features that come with `ipython` make it far easier to use.
 
 .. code-block:: python
-import fibonacci
-```
+   
+   import fibonacci
 
+   
 we can then call our function by doing
 
 .. code-block:: python
-fibonacci.fibonacci.fib(3)
-```
+		
+   >>> fibonacci.fibonacci.fib(3)
+   2
+
 
 this looks repetative and redundant, as we have two instances of 'fibonacci' in this function call. This is because the first fibonacci is the package (`fibonacci/`) and the second is the module (`fibonacci.py`). Both of these are namespaces used. We can avoid this long function call in a different ways:
 
 We could import the module from the package:
 
 .. code-block:: python
-from fibonacci import fibonacii
-fibonacci.fib(3)
-```
+		
+   >>> from fibonacci import fibonacci
+   >>> fibonacci.fib(3)
 
 or we could import the module directly
 
 .. code-block:: python
-import fibonacci.fibonacci
-fibonacci.fib(3)
-```
-
+		
+   >>> import fibonacci.fibonacci
+   >>> fibonacci.fib(3)
 
 it would be easier for the users of our package if they did not have to do this when importing our package. To avoid this we can change the contents of out `__init__.py` to import functions from our modules into the package which would allow us to call the function like so:
 
 .. code-block:: python
-import fibonacci
-fibonacci.fib(3)
-```
+
+   >>> import fibonacci
+   >>> fibonacci.fib(3)
+
 
 There are two ways to do this. We can import an individual function or we can import the whole of a module. It is far easier to import the whole module, that way we don't have to remember to update `__init__.py` each time we create a new object (recalling that everything, function, classes, and variables are objects in python).  The downide to this is that you then cannot have two functions of the same name in different modules as they will lose their module namespace and only have teh packages namespace. It would also mean that users have access to all objects in our modules, which we may not want.  In which case we can use the second method and import just the function from out module.
 
 to import the whole module out `__init__.py` should look like this:
 
 .. code-block:: python
-# import all the objects in the module 'fibonacci'
-from .fibonacci import *
-```
+		
+   # import all the objects in the module 'fibonacci'
+   from .fibonacci import *
+
 note that the leading dot is needed (in python 3) to tell python where to begin looking for a module, and the asterix means all.
 
 to only import a single function (which makes little difference in our example as we only have one) we do this:
 
 
 .. code-block:: python
-# import just the named modules from 'fibonacci'
-from .fibonacci import fib
-```
+
+   #import just the named modules from 'fibonacci'
+   from .fibonacci import fib
+
 
 when someone imports fibonacci and calls `fibonacci.fib(3)` the action of importing and calling is the same for both. In the second `__init__.py` they will only have access to the named objects though.
 
-.. `Python <http://www.python.org/>`_
-
-.. `Structuring your project <https://docs.python-guide.org/writing/structure/>`_
-
-.. `Steps to success <https://towardsdatascience.com/10-steps-to-set-up-your-python-project-for-success-14ff88b5d13>`_
-
-`Setuptools <https://setuptools.readthedocs.io/en/latest/setuptools.html#using-find-packages>`_
-
-.. `Dead Simple Python: Project Structure and Imports <https://dev.to/codemouse92/dead-simple-python-project-structure-and-imports-38c6>`_
-
-.. `pypa on layout <https://github.com/pypa/packaging.python.org/issues/320>`_
+.. NOTE::
+   * `Python <http://www.python.org/>`_
+   * `Structuring your project <https://docs.python-guide.org/writing/structure/>`_
+   * `Steps to success <https://towardsdatascience.com/10-steps-to-set-up-your-python-project-for-success-14ff88b5d13>`_
+   * `Setuptools <https://setuptools.readthedocs.io/en/latest/setuptools.html#using-find-packages>`_
+   * `Dead Simple Python: Project Structure and Imports <https://dev.to/codemouse92/dead-simple-python-project-structure-and-imports-38c6>`_
+   * `pypa on layout <https://github.com/pypa/packaging.python.org/issues/320>`_
 
 Packaging
 =========
 
-.. how to package
-.. setup.py and various layouts.
-.. ?should we discuss requirements.txt here or leave until later?
-
 setup.py
 --------
-.. discuss creating setup.py and import.
-.. need to be inside src to do import.
-.. discuss types of import and need to rename files.
    
 In the current way our package is structured, we have to be in the `src` directory in order to import our package into python. This makes it very hard to distribute or even use our package.  To solve this we will create a `setup.py` file in our project directory which will use the `setuptools` package to allow us to install our package using the package managment system `pip`. 
 
@@ -221,20 +190,21 @@ In the current way our package is structured, we have to be in the `src` directo
 Lets look at the `setup.py` file we need for our 'fibonacci' package.
 
 .. code-block:: python
-from setuptools import setup, find_packages
 
-setup(
-    name="fibonacci",
-    version="0.1",
-    author="Robin Long",
-    author_email="robin.long1@hotmai.co.uk",
-    url="https://github.com/longr/python_packaging_example",
-    description="A simple package containing a single module with a single function that finds the nth fibonacci number.",
-    packages=find_packages(where="src"),
-    package_dir={"":"src"},
-    install_requires=[""]
-)
-```
+   from setuptools import setup, find_packages
+
+   setup(
+       name="fibonacci",
+       version="0.1",
+       author="Robin Long",
+       author_email="robin.long1@hotmai.co.uk",
+       url="https://github.com/longr/python_packaging_example",
+       description="A simple package containing a single module with a single function that finds the nth fibonacci number.",
+       packages=find_packages(where="src"),
+       package_dir={"":"src"},
+       install_requires=[""]
+   )
+
 
 There are quite a few things here so lets look at them.
 
@@ -246,66 +216,60 @@ There are quite a few things here so lets look at them.
 * `packages`: This needs to be the path to our package directory.  `setuptools` contains lots of helpful functions, and one of those is `find_packages` which will search in a given directory, in our case `src` and look for any directory that looks like a package. This is the only line you should change for your own package, the rest should be customised as needed.
 * `package_dir`: This takes a dictionary with `""` as the key, and the directory our package is in as the value.
 * `install_requires` takes a python list of packages that our package depends on. At the minute we have no dependencies so it is blank.
-  .. What does package_dir do?
 
+  .. TODO::
+     What does package_dir do?
 
 It is worth noting that the main function we call, `setup()`, takes a series of comma separated arguments. It is quite happy to have comma after the last argument which makes adding and removing arguments easier.
-  
-.. `Packaging a python library <https://blog.ionelmc.ro/2014/05/25/python-packaging/>`_
 
-.. `RealPython Packages and Modules <https://realpython.com/python-modules-packages/>`_
 
-.. `Build a pip packages <https://dzone.com/articles/executable-package-pip-install>`_
-
-.. `Packaging - PyPi <https://the-hitchhikers-guide-to-packaging.readthedocs.io/en/latest/contributing.html>`_
-
-.. `Packaging Python Projects <https://packaging.python.org/tutorials/packaging-projects/#generating-distribution-archives>`_
-
-.. `Packaging binary extensions <https://packaging.python.org/guides/packaging-binary-extensions/>`_
-
-.. `Setuptools <https://setuptools.readthedocs.io/en/latest/setuptools.html#using-find-packages>`_
-
-.. `Practical guide to Setup.py <https://blog.godatadriven.com/setup-py>`_
+.. NOTE::
+   * `Packaging a python library <https://blog.ionelmc.ro/2014/05/25/python-packaging/>`_
+   * `RealPython Packages and Modules <https://realpython.com/python-modules-packages/>`_
+   * `Build a pip packages <https://dzone.com/articles/executable-package-pip-install>`_
+   * `Packaging - PyPi <https://the-hitchhikers-guide-to-packaging.readthedocs.io/en/latest/contributing.html>`_
+   * `Packaging Python Projects <https://packaging.python.org/tutorials/packaging-projects/#generating-distribution-archives>`_
+   * `Packaging binary extensions <https://packaging.python.org/guides/packaging-binary-extensions/>`_
+   * `Setuptools <https://setuptools.readthedocs.io/en/latest/setuptools.html#using-find-packages>`_
+   * `Practical guide to Setup.py <https://blog.godatadriven.com/setup-py>`_
 
 .. create DOI
 
 Running and installing the package
 ----------------------------------
 
-.. Should we reintroduce venv here?
+.. TODO::
+   Should we reintroduce venv here?
    
-
 Now that we have created our `setup.py` we can install and test our package.  To install our package we need to build it. This will create a tar.gz (or zip) file in a directory called `dist`.  This is a source distribution.  We can send this file to people and they will be able to install our package.
 
 To build the package, from our root directory (the one with the `setup.py` file in it), we need to use the command:
 
-```bash
-python setup.py sdist
-```
+.. code-block:: bash
+
+   python setup.py sdist
 
 This will build the source distribution for us. The tar file that is created will be named *<package_name>-<version>* both of these values are taken from the lines in `setup.py`.  To install the package we just need to use pip.
 
-```bash
-pip install dist/fibonacci-0.1.tar.gz --user
-```
+.. code-block:: bash
+
+   pip install dist/fibonacci-0.1.tar.gz --user
 
 ..Note if you are working inside a virtual enviroment (don't worry if you don't know what one is) you won't need the `--user` flag.  This flag ensure that the package is installed to your local area and not system wide.
 
 We can now open up a python terminal and test our package:
 
 .. code-block:: python
-import fibonacci
-fibonacci.fib(10)
-# 55
-```
+
+   import fibonacci
+   fibonacci.fib(10)
+   55
 
 .. NOTE::
    We will have to rebuild the source distribution, and reinstall it every time we make changes to our package. 
 
 Build and distribute
 --------------------
-
-.. again, venv?
 
 If we are not wanting to distribute our package (yet), then we can skip the build step and let `pip` do this for us in a temporary directory and install it in one command.
 
@@ -316,43 +280,25 @@ pip install . --user
 ```
 will build and install our package. As before, we will have to reinstall each time we make changes to our package.  We can skip this step by installing it in development or editable mode.  In this situation (as long as we are only python with no C/C++ code) we can edit our package and the changes will appear in our package as soon as we import it.
 
-```bash
-pip install -e . --user
-```
+.. code-block:: bash
+
+   pip install -e .
 
 We can test this by making a quick change to our `fibonacci.py` file.
 
-.. Should these go here? or just before distributing on PyPi?
-
-If we don't care about quality or whether our software is sustainable, then we can skip to "Distributing our Package".  However, we should be concerned with this, and as this is primarily aimed at researchers, we need to be concerned with this. So read on to the next sections about how to ensure our software is sustainable, and our research is reproducible.
-
-#
-#Manifest
-#--------
-#
-#.. what does manifest protect against?
-#
-#Licence
-#-------
-#
-#.. Yes needed, add.
-#
-#Style Guide
-#-----------
-#
-#.. Add these to documentation
-#   
-#Contributing
-#------------
-#
-#.. Again, documentation
-#
+.. TODO::
+   Talk about the following in package:
+   * Manifest
+   * Licence
+   * Style Guide
+   * Contributing
 
 Testing with pytest
 ===================
 
-.. redo with tox, perhaps intorduce with venv for quick turn around.
-.. Might have to include tox, might not be any other option.
+.. TODO::
+   * Need to redo with tox as introduced later on for travis
+   * Introduce venv for quick test?
 
 We have written some software which is great. The software above does very little, but any you are writing for yourself will probably be to do research whose results can be published, or to produce software that can be published that will help other people do research. In which case the publishers and users (and you) need to have faith that the software works as it is meant to.  Since we are researchers we don't want to go on faith alone, we want facts. We do this by testing our code.
 
@@ -368,15 +314,16 @@ Layout
 
 Pytest supports two styles of layouts, as always we will look at just one.
 
-```bash
-project
-|--src
-|   `--my_package
-|          |-- __init__.py
-|          `-- my_module
-`--tests
-    `--test_my_module.py
-```
+.. code-block:: bash
+		
+   project
+   |--src
+   |   `--my_package
+   |          |-- __init__.py
+   |          `-- my_module
+   `--tests
+   `--test_my_module.py
+
 Using this layout, pytest will be able to find and run your tests against your code. All tests should go in files beginning `test_` and should be inside our `test` directory.
 
 Writing tests
@@ -386,28 +333,29 @@ Pytest is a very powerful program, yet it has a simple syntax.
 Now that we have our layout, We can create the file `test/test_fibonacci.py` and put some tests in it to see if our code works.
 
 .. code-block:: python
-# contents of test_fibonacci.py
-import pytest
-import fibonacci
 
-def test_fib_check_zero():
-    assert fibonacci.fib(0) == 0
-```
+   # contents of test_fibonacci.py
+   import pytest
+   import fibonacci
+   
+   def test_fib_check_zero():
+       assert fibonacci.fib(0) == 0
 
 To run these tests we need to call `pytest` on the command line.
 
-```bash
-pytest
-========================================== test session starts ==========================================
-platform linux -- Python 3.7.5, pytest-5.2.1, py-1.8.0, pluggy-0.12.0
-rootdir: /home/user/python_packaging_example
-plugins: flakes-4.0.0, cov-2.8.1, pep8-1.0.6
-collected 1 item                                                                                        
+.. code-block:: bash
 
-tests/test_fibonacci.py .                                                                         [100%]
-
-=========================================== 1 passed in 0.02s ===========================================
-```
+   $ pytest
+   ========================================== test session starts ==========================================
+   platform linux -- Python 3.7.5, pytest-5.2.1, py-1.8.0, pluggy-0.12.0
+   rootdir: /home/user/python_packaging_example
+   plugins: flakes-4.0.0, cov-2.8.1, pep8-1.0.6
+   collected 1 item                                                                                        
+   
+   tests/test_fibonacci.py .                                                                         [100%]
+   
+   =========================================== 1 passed in 0.02s ===========================================
+   
 
 Pytest found our test file (`tests/test_fibonacci.py`) and 1 test (indicated by the '.' after the file name).  It was that simple, but now lets look at the test file in more detail.
 
@@ -415,32 +363,28 @@ The first thing we need to do is import the modules we need; at a minimum these 
 
 We then need to write our tests. Each test should begin with `test_`. Naming them like this ensures that **pytest** can find them. They should have a decriptive name that tells us what the test does, such as what function is called and what we are testing it for. The test function is then very simple. We can conduct many different tests in these functions, many of which are beyond the scope of this guide. We shall just look at assert for now.  `assert` will check that a conditional expression evaluates to `true`. In our case we have stated that `fibonnaci.fib(0) == 0`. When this function is run, a test will pass if the conditional evaluates to true.
 
-# Removed integration with setuptools as this is being depreciated and does not work properly.
+.. NOTE::
+   Removed integration with setuptools as this is being depreciated and does not work properly.
 
+   * `Packaging and Testing <https://hynek.me/articles/testing-packaging/>`_
+   * `Hitch Hikers HGuide testing <https://docs.python-guide.org/writing/tests/>`_
+   * `UCL <http://rits.github-pages.ucl.ac.uk/research-se-python/morea/section2/reading3.html>`_
+   * `PyTest <https://docs.pytest.org/en/latest/>`_
+   * `RealPython Testing <https://realpython.com/python-testing/>`_
+   * `Good practises <https://pytest.readthedocs.io/en/2.7.3/goodpractises.html>`_
 
-.. init.py in tests
-.. Use hypothesis?
-   
+.. TODO::
+   * Add extra sections? What makes a good tests and best practises.
+   * init.py in tests
+   * Should we use hypothesis?
 
-`Packaging and Testing <https://hynek.me/articles/testing-packaging/>`_
-
-`Hitch Hikers HGuide testing <https://docs.python-guide.org/writing/tests/>`_
-
-`UCL <http://rits.github-pages.ucl.ac.uk/research-se-python/morea/section2/reading3.html>`_
-
-`PyTest <https://docs.pytest.org/en/latest/>`_
-
-`RealPython Testing <https://realpython.com/python-testing/>`_
-
-`Good practises <https://pytest.readthedocs.io/en/2.7.3/goodpractises.html>`_
-
-.. What makes a good tests and best practises.
 
 
 Code Coverage
 -------------
 
-.. redo with tox
+.. TODO::
+   Re-do this section with tox as all other use it.
 
 Testing will show us that (hopefully) those bits of code we tested worked as expected, but that is not the whole story. How much of our code has been tested? Having 100% of tests passing is great, but it means nothing if we have not tested all our code. So how do we check it is all being tested? We do this we code coverage.
 
@@ -557,7 +501,7 @@ We can run our tests by calling `tox` on the command line:
 
 tox runs the tests we wrote for each of the versions of python specified in our `tox.ini`; Note that in the above output, we have truncated the output and shown the tests being run against the last version of python only.
 
-.. warning::
+.. WARNING::
 
    You may get errors when trying to run this on your own system.  This will because the various implementations are python will not be installed. By default only one version of python3 is installed.  To solve this we can ask tox to run against a single implementation by calling `tox -e <python_enviroment>`.  To run only python 3.7 we would call `tox -e py37`.
 
@@ -565,7 +509,9 @@ tox runs the tests we wrote for each of the versions of python specified in our 
 Tox and Code coverage
 ---------------------
 
-.. https://pytest-cov.readthedocs.io/en/latest/tox.html
+
+.. NOTE::
+   `Tox and pyTest <https://pytest-cov.readthedocs.io/en/latest/tox.html>`_
 
 Previously we used code coverage with pytest to see how much of our code has been covered by tests.  We can do this in tox aswell by adding the `--cov fibonacci` flag to `command = pytest` line in our tox.ini.
 
@@ -624,10 +570,8 @@ We can now run tox again and it will print out our coverage:
 The output above is truncated, but we can see that the list of files covered by the tests increase with each run as more files (in different virtual environments) are added to the coverage report.  You only need to have 100% coverage across all files, not in each one, to get 100% coverage.
    
 
-   Tests and Continuous Integration
+Tests and Continuous Integration
 ================================
-
-.. redo with tox
 
 We now have a python package that is installable, and has inbuilt tests and coverage reports - the later help build confidence in the packages reproducibility. We can ensure these tests are ran when we push our commits to github, this will give us confidence that our public code has always been tested, and show other users that its has been tested as well.
 
@@ -641,7 +585,9 @@ TravisCI
 
 To use TravisCI we need to create an account with TravisCI, and grant it access to the repository that conatins your code.  To do this just go to `Travis CI <https://travis-ci.com/>`_ and sign up with your Github account.
 
-.. Add setting up travis on github and getting account
+
+.. TODO::
+   * Add setting up travis on github and getting account
 
 TravisCI provides virtual machines that our package is built and ran on, this allows us to test against multiple versions of python, and against different operating systems.  We will also use an extra package called `tox-travis` which makes it easier to use tox and travis together.
 
@@ -682,16 +628,12 @@ Now, each time we issue a `git push` and our commits are sent to github, these t
 
 You can get the badge for your package by going to:
 
-.. Add instructions on getting badge.
+.. TODO::
+   * Add instructions on getting badge.
 
-.. extras_require   https://stackoverflow.com/questions/4734292/specify-where-to-install-tests-require-dependencies-of-a-distribute-setuptools/7747140#7747140
-
-.. tests_require   https://stackoverflow.com/questions/4734292/specify-where-to-install-tests-require-dependencies-of-a-distribute-setuptools/7747140#7747140
-
-    
-`Extensive Python Testing on Travis CI <https://blog.travis-ci.com/2019-08-07-extensive-python-testing-on-travis-ci>`_
-
-`Untold stories about python unit tests <https://hackernoon.com/untold-stories-about-python-unit-tests-a141501f0ee>`_
+.. NOTE::
+   * `Extensive Python Testing on Travis CI <https://blog.travis-ci.com/2019-08-07-extensive-python-testing-on-travis-ci>`_
+   * `Untold stories about python unit tests <https://hackernoon.com/untold-stories-about-python-unit-tests-a141501f0ee>`_
 
 Test coverage
 =============
@@ -720,29 +662,26 @@ Now that we have tests working with continuous integration we can expand this to
 
 We have now added `codecov` as a dependency under `install:`, and a new section labelled `after_success`:`; this section contains the commands to run once all our `script:` jobs have been run successfully. We have added one entry, `codecov`.  As long as we have a public GitHub account, and a codecov.io account, this will send our coverage report to codecov.io.
 
-       
-`Pytest and coverage <https://stackoverflow.com/questions/21991765/how-to-generate-coverage-from-setup-py>`_
-
-`pytest import issues <http://doc.pytest.org/en/latest/pythonpath.html#pytest-vs-python-m-pytest>`_
-
-`Codecov + python + travis <https://dev.to/j0nimost/using-codecov-with-travis-ci-pytest-cov-1dfj>`_
-`exclude files from codecov <https://docs.codecov.io/docs/codecov-yaml>`_
-`Codecov + python + travis beginners <https://medium.com/datadriveninvestor/beginners-guide-to-using-codecov-with-python-and-travis-ci-c17659bb711>`_
-`Codecov yaml <https://docs.codecov.io/docs/codecov-yaml>`_
+.. NOTE::
+   * `Pytest and coverage <https://stackoverflow.com/questions/21991765/how-to-generate-coverage-from-setup-py>`_
+   * `pytest import issues <http://doc.pytest.org/en/latest/pythonpath.html#pytest-vs-python-m-pytest>`_
+   * `Codecov + python + travis <https://dev.to/j0nimost/using-codecov-with-travis-ci-pytest-cov-1dfj>`_
+   * `exclude files from codecov <https://docs.codecov.io/docs/codecov-yaml>`_
+   * `Codecov + python + travis beginners <https://medium.com/datadriveninvestor/beginners-guide-to-using-codecov-with-python-and-travis-ci-c17659bb711>`_
+   * `Codecov yaml <https://docs.codecov.io/docs/codecov-yaml>`_
 
 
-.. Testing on multiple OS's
-
-`Testing Your Project on Multiple Operating Systems <https://docs.travis-ci.com/user/multi-os/>`_
-
-`Windows build on Travis <https://docs.travis-ci.com/user/reference/windows/>`_
+.. TODO::
+   Testing on multiple OS's
+   * `Testing Your Project on Multiple Operating Systems <https://docs.travis-ci.com/user/multi-os/>`_
+   * `Windows build on Travis <https://docs.travis-ci.com/user/reference/windows/>`_
 
 Documentation
 =============
 
-.. Add description of how to document and different types
-
-.. https://realpython.com/documenting-python-code/
+.. TODO::
+   Add description of how to document and different types
+   `Documenting Python <https://realpython.com/documenting-python-code/>`_
 
 One of the main tasks we need to do for our project, and the most over looked is to document it.  As usual, there are many ways to do this, but only one that we will look at.  We will use a python program called **sphinx**, which converts reStructuredText (.rst) files into our choice of html, pdf, and epub.  We can choose to do all or some of these.
 
@@ -956,10 +895,13 @@ Writing Documentation in Sphinx
 
 We can now create our documentation.  Everything should be written in `.rst` files in `docs/source/`.
 
-.. Add reST primer.
+.. TODO::
 
-.. Discuss types of documenation?
-.. https://brandons-sphinx-tutorial.readthedocs.io/en/latest/quick-sphinx.html
+   * Add reST primer.
+   * Discuss types of documenation?
+
+.. NOTE::
+   * `Quick reST guide <https://brandons-sphinx-tutorial.readthedocs.io/en/latest/quick-sphinx.html>`_
 
 Automatic Documentation
 -----------------------
@@ -1002,8 +944,12 @@ Now when we use the `make` command, or more correctly use `tox -e docs` to build
 .. INFORMATION::
    As our project progress it might make sense to split this into more files; perhaps one called `modules.rst` which links to all the others with one `.rst` file per module/sub-module.
 
-.. which first User, or guide?  Guide as depends on user.
+.. TODO::
+   * Which first User, or guide?  Guide as depends on user.
 
+.. NOTE::
+   
+   `Sphinx and Autodoc <https://medium.com/@eikonomega/getting-started-with-sphinx-autodoc-part-1-2cebbbca5365>`_
 
 Testing documentation with Doctest
 ----------------------------------
@@ -1064,7 +1010,7 @@ We can see that this succeeds, 0 test are found, and 0 failed.  Great! now lets 
 
 .. code-block:: python
 
-   >> 4+9
+   >>> 4+9
    13
 
 `doctest` will assume that `4+9` is python code as the line starts with `>>>`, and that the next line is the expected output since it does not start with `>>>`.
@@ -1137,98 +1083,52 @@ We now have a docstring with a piece of example code. We can test this by callin
   congratulations :)
 
 Hopefully our "tests" passed, you could try changing the output to another number to see how it fails.
+
+Similarly, we can add code snippets into our reStructured text files.
    
-
-.. https://medium.com/@eikonomega/getting-started-with-sphinx-autodoc-part-1-2cebbbca5365
-
-.. Should we do pytest --doctest-modules??  http://doc.pytest.org/en/latest/doctest.html
-
+.. TODO::
+   * Should we discuss `pytest --doctest-modules`?  Perhaps not, but could do in separate section. Or in Pytest?
+   * `pyTest doctest <http://doc.pytest.org/en/latest/doctest.html>`_
 
    
-Documenting your project
-========================
+Documentation - Further Reading
+===============================
 
 Use one of any tutorials:
 
-https://www.pythonforthelab.com/blog/documenting-with-sphinx-and-readthedocs/
-https://medium.com/@eikonomega/getting-started-with-sphinx-autodoc-part-1-2cebbbca5365
-https://gisellezeno.com/tutorials/sphinx-for-python-documentation.html
+`Sphinx and ReadTheDocs <https://www.pythonforthelab.com/blog/documenting-with-sphinx-and-readthedocs/>`_
+`Sphinx for Python <https://gisellezeno.com/tutorials/sphinx-for-python-documentation.html>`_
 
-Location needs to be ../../src for api docs to work.
-
-Discuss:  Use PFTL style or quickstart?  Use make or sphinx-build?  Some errors in layout, look at.
-
-Not looked at doctest yet.
-
-for apidocs:  https://github.com/sphinx-contrib/apidoc
-
-Main note on docs is need to add modules.rst to index.rst or somewhere so it is linked.  Have put notes in tox and how to use tox for api gen and docs gen.  Look at testing next, and then deploying.
+.. TODO::
+   Should we use PFTL style or quickstart?
 
 
-.. links
-   https://opendev.org/openstack/openstacksdk/src/branch/master/tox.ini
-   https://pypi.org/project/pytest-sphinx/
-   https://samnicholls.net/2016/06/15/how-to-sphinx-readthedocs/
-   https://tox.readthedocs.io/en/latest/example/documentation.html
+.. NOTE::
+   * https://github.com/sphinx-contrib/apidoc
+   * https://opendev.org/openstack/openstacksdk/src/branch/master/tox.ini
+   * https://pypi.org/project/pytest-sphinx/
+   * https://samnicholls.net/2016/06/15/how-to-sphinx-readthedocs/
+   * https://tox.readthedocs.io/en/latest/example/documentation.html
+   * https://medium.com/@eikonomega/getting-started-with-sphinx-autodoc-part-1-2cebbbca5365
+   * https://alexgaynor.net/2010/dec/17/getting-most-out-tox/
+   * https://github.com/Syntaf/travis-sphinx
+   * https://ofosos.org/2019/01/06/doctest-travis/
+   * https://blog.justinwflory.com/2018/12/meet-an-opinionated-quickstart-for-sphinx-docs-authors/
+   * https://docs.pylonsproject.org/projects/docs-style-guide/
+   * https://github.com/Pylons/docs-style-guide/blob/master/tox.ini
+   * https://opendev.org/openstack/openstacksdk/src/branch/master/tox.ini
+   * https://github.com/Pylons/docs-style-guide/blob/master/tox.ini
+   * https://github.com/iScrE4m/pyCardDeck/blob/master/tox.ini
+   * https://developer.ridgerun.com/wiki/index.php/How_to_generate_sphinx_documentation_for_python_code_running_in_an_embedded_system
+   * https://tox.readthedocs.io/en/latest/example/documentation.html
+   * https://alexgaynor.net/2010/dec/17/getting-most-out-tox/
+   * https://stackoverflow.com/questions/56336234/build-fail-sphinx-error-contents-rst-not-found
+   * https://www.dominicrodger.com/2013/07/26/tox-and-travis/
+   * https://github.com/tox-dev/tox-travis/blob/master/.travis.yml
+   * https://github.com/Pylons/pyramid/blob/master/docs/Makefile
 
-   https://medium.com/@eikonomega/getting-started-with-sphinx-autodoc-part-1-2cebbbca5365
-   https://alexgaynor.net/2010/dec/17/getting-most-out-tox/
-   https://github.com/Syntaf/travis-sphinx
-   https://ofosos.org/2019/01/06/doctest-travis/
-   https://blog.justinwflory.com/2018/12/meet-an-opinionated-quickstart-for-sphinx-docs-authors/
-   https://docs.pylonsproject.org/projects/docs-style-guide/
-   https://github.com/Pylons/docs-style-guide/blob/master/tox.ini
-
-   ## works  builds docs into .tox area. Better?
-#[testenv:docs2]
-#description = invoke sphinx-build to build the HTML docs
-#basepython = python3.7
-#deps = sphinx >= 1.7.5, < 2
-#     sphinx_rtd_theme
-#commands = sphinx-apidoc -f -o docs/source/ src/fibonacci
-#	 sphinx-build -d "{toxworkdir}/docs_doctree" docs/source "{toxworkdir}/docs/build" --color -W -bhtml {posargs}
-#           python -c 'import pathlib; print("documentation available under file://\{0\}".format(pathlib.Path(r"{toxworkdir}") / "docs_out" / "index.html"))'
-# not sure what last line does
-
-#works
-#works with apidoc
-### Stolen from https://opendev.org/openstack/openstacksdk/src/branch/master/tox.ini
-#[testenv:docs]
-#deps =
-#    sphinx
-#    sphinx_rtd_theme
-#commands =
-#    sphinx-apidoc -f -o docs/source/ src/fibonacci
-#    sphinx-build -W -d docs/build/doctrees -b html docs/source/ docs/build/html
-#    python -m sphinx -b doctest -d {envdir}/.cache/doctrees docs/source {envdir}/.cache/doctest
-#
-
-
-# Could  use
-
-#https://github.com/Pylons/docs-style-guide/blob/master/tox.ini
-#https://github.com/iScrE4m/pyCardDeck/blob/master/tox.ini
-
-# https://developer.ridgerun.com/wiki/index.php/How_to_generate_sphinx_documentation_for_python_code_running_in_an_embedded_system
-#[testenv:html]
-#basepython = python3.6
-#whitelist_externals = make
-#commands =
-#    make -C docs html BUILDDIR={envdir} "SPHINXOPTS=-W -E"
-
-# make -C dir: change to dir first.
-
-# Also look at:
-# https://tox.readthedocs.io/en/latest/example/documentation.html
-# https://alexgaynor.net/2010/dec/17/getting-most-out-tox/
-# https://stackoverflow.com/questions/56336234/build-fail-sphinx-error-contents-rst-not-found
-# https://www.dominicrodger.com/2013/07/26/tox-and-travis/
-# https://github.com/tox-dev/tox-travis/blob/master/.travis.yml
-# 
-
-.. LOOK at this: https://github.com/Pylons/pyramid/blob/master/docs/Makefile
-
-Pyramids is gold standard for sphinx.  They have modifed make file, consider doing the same to allow build.    Also perhaps remove travis-tox?? to confusing and hides things?
+.. NOTE::
+   Pyramids is considered the gold standard for sphinx.  They have modifed make file, consider doing the same to allow build.    Also perhaps remove travis-tox?? to confusing and hides things?
 
 CI and Docs
 ===========
@@ -1248,9 +1148,11 @@ Uploading to PiPy with CI
 `Upload to PyPi <https://gist.github.com/gboeing/dcfaf5e13fad16fc500717a3a324ec17>`_
 
 
-.. Do we need to talk about MANINFEST.ini and packaging data with projects?
+.. TODO::
+   Do we need to talk about MANINFEST.ini and packaging data with projects?
 
-.. What does what
+.. NOTE::
+   What does what
 
    setup.py - distributable
    pytest - check it is correct
