@@ -27,4 +27,4 @@ How this was made
    :caption: Guide to creating this package
    :maxdepth: 2
 
-   guide.rst
+   guide/index.rst
