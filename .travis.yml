@@ -17,9 +17,17 @@ matrix:
   include:
     - python: 3.7
       env: TOXENV=docs
-    - os : windows
-      # https://blog.travis-ci.com/2018-10-11-windows-early-release
-      language : shell
+    #- os : windows
+    #  # https://blog.travis-ci.com/2018-10-11-windows-early-release
+    #  language : shell
+    #  python: "3.6"
+    #  env: TOXENV=py36
+    - os: windows
+      language: shell
+      before_install:
+        - choco install python --version 3.6
+        - python --version
+        - python -m pip install --upgrade pip
       python: "3.6"
       env: TOXENV=py36
 
