@@ -1,0 +1,1338 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Python Packaging Example &mdash; fibonacci 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Module API for Fibonacci" href="../fibonacci.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> fibonacci
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../fibonacci.html">Module API for Fibonacci</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Guide to creating this package</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Python Packaging Example</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#modules-and-packages">Modules and Packages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#package-layout">Package Layout</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#importing-modules">Importing modules</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#packaging">Packaging</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#setup-py">setup.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#running-and-installing-the-package">Running and installing the package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#build-and-distribute">Build and distribute</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#testing-with-pytest">Testing with pytest</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#layout">Layout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#writing-tests">Writing tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#code-coverage">Code Coverage</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#better-testing-with-tox">Better testing with Tox</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#configuring-tox">Configuring Tox</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#running-tox">Running Tox</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tox-and-code-coverage">Tox and Code coverage</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#tests-and-continuous-integration">Tests and Continuous Integration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#travisci">TravisCI</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#test-coverage">Test coverage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#documentation">Documentation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#building-the-documentation">Building the documentation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#writing-documentation-in-sphinx">Writing Documentation in Sphinx</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#automatic-documentation">Automatic Documentation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#testing-documentation-with-doctest">Testing documentation with Doctest</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#documentation-further-reading">Documentation - Further Reading</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ci-and-docs">CI and Docs</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#read-the-docs">Read the docs</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#code-quality-with-linters">Code Quality with Linters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#uploading-to-pipy-with-ci">Uploading to PiPy with CI</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">fibonacci</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Python Packaging Example</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/guide/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="python-packaging-example">
+<h1><a class="toc-backref" href="#id21">Python Packaging Example</a><a class="headerlink" href="#python-packaging-example" title="Permalink to this headline">¶</a></h1>
+<div class="admonition-todo admonition" id="id1">
+<p class="admonition-title">Todo</p>
+<ul class="simple">
+<li><p>Zenodo and DOI</p></li>
+<li><p>Upload to PyPi</p></li>
+<li><p>Build on windows + mac</p></li>
+<li><p>ORCID</p></li>
+<li><p>GIT Hub instructions</p></li>
+<li><p>ReadTheDocs</p></li>
+<li><p>pyproject.toml</p></li>
+<li><p>README.md badges:
+* Download (Github / PyPi)
+* Tests
+* Coverage
+* Docs</p></li>
+</ul>
+</div>
+<p>We shall build sustainable software with Python, Setuptools(setup.py). We will test this with PyTest and Tox(tox.ini), and test coverage with pytest-cov. Further more we will introduce Conitinuous intereation with travis.</p>
+<p>We will then document our code with Sphinx, automatically document our functions with docstrings and autodoc. We will then test any examples automatically with doctest.</p>
+<div class="section" id="introduction">
+<h2><a class="toc-backref" href="#id22">Introduction</a><a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>There are lots of resources explaining how to package, test, document and otherwise implement features and styles that will make your python code better and moe sustainable.  However many of these are hidden unless you search for the exact terms, or are not specific enough, or are to specific. These guide hopes to give an opinionated (it won’t suggest alternative tools, just pick ones the authors prefer and explain how to use them and only them).   This repositry itself will act as an example of all the features and suggestions.</p>
+<p>In the following tutorial we will build a package named <code class="docutils literal notranslate"><span class="pre">fibonacci</span></code> that contains a single function named <code class="docutils literal notranslate"><span class="pre">fib</span></code>.  We shall put this into a package, and then add tests, documentation and take you through the other steps needed to turn our file into a full python package which adhers to all best practises in writing python code and reproducible and sustainable software.</p>
+<div class="contents topic" id="contents">
+<p class="topic-title">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#python-packaging-example" id="id21">Python Packaging Example</a></p>
+<ul>
+<li><p><a class="reference internal" href="#introduction" id="id22">Introduction</a></p></li>
+<li><p><a class="reference internal" href="#modules-and-packages" id="id23">Modules and Packages</a></p></li>
+<li><p><a class="reference internal" href="#package-layout" id="id24">Package Layout</a></p>
+<ul>
+<li><p><a class="reference internal" href="#importing-modules" id="id25">Importing modules</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#packaging" id="id26">Packaging</a></p>
+<ul>
+<li><p><a class="reference internal" href="#setup-py" id="id27">setup.py</a></p></li>
+<li><p><a class="reference internal" href="#running-and-installing-the-package" id="id28">Running and installing the package</a></p></li>
+<li><p><a class="reference internal" href="#build-and-distribute" id="id29">Build and distribute</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#testing-with-pytest" id="id30">Testing with pytest</a></p>
+<ul>
+<li><p><a class="reference internal" href="#layout" id="id31">Layout</a></p></li>
+<li><p><a class="reference internal" href="#writing-tests" id="id32">Writing tests</a></p></li>
+<li><p><a class="reference internal" href="#code-coverage" id="id33">Code Coverage</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#better-testing-with-tox" id="id34">Better testing with Tox</a></p>
+<ul>
+<li><p><a class="reference internal" href="#configuring-tox" id="id35">Configuring Tox</a></p></li>
+<li><p><a class="reference internal" href="#running-tox" id="id36">Running Tox</a></p></li>
+<li><p><a class="reference internal" href="#tox-and-code-coverage" id="id37">Tox and Code coverage</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#tests-and-continuous-integration" id="id38">Tests and Continuous Integration</a></p>
+<ul>
+<li><p><a class="reference internal" href="#travisci" id="id39">TravisCI</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#test-coverage" id="id40">Test coverage</a></p></li>
+<li><p><a class="reference internal" href="#documentation" id="id41">Documentation</a></p>
+<ul>
+<li><p><a class="reference internal" href="#building-the-documentation" id="id42">Building the documentation</a></p></li>
+<li><p><a class="reference internal" href="#writing-documentation-in-sphinx" id="id43">Writing Documentation in Sphinx</a></p></li>
+<li><p><a class="reference internal" href="#automatic-documentation" id="id44">Automatic Documentation</a></p></li>
+<li><p><a class="reference internal" href="#testing-documentation-with-doctest" id="id45">Testing documentation with Doctest</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#documentation-further-reading" id="id46">Documentation - Further Reading</a></p></li>
+<li><p><a class="reference internal" href="#ci-and-docs" id="id47">CI and Docs</a></p>
+<ul>
+<li><p><a class="reference internal" href="#read-the-docs" id="id48">Read the docs</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#code-quality-with-linters" id="id49">Code Quality with Linters</a></p></li>
+<li><p><a class="reference internal" href="#uploading-to-pipy-with-ci" id="id50">Uploading to PiPy with CI</a></p></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="modules-and-packages">
+<h2><a class="toc-backref" href="#id23">Modules and Packages</a><a class="headerlink" href="#modules-and-packages" title="Permalink to this headline">¶</a></h2>
+<p>In python a module is a single python file ending in <code class="docutils literal notranslate"><span class="pre">.py</span></code> that can be imported using the command <code class="docutils literal notranslate"><span class="pre">import</span></code>. Each module has its own namespace, this means that functions in this module can call each other without having to reference the modules file name. Outside of the module, such as when we import it, the module name needs to be used when calling the a function in the file, such as in the example below.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">fibonacci</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fibonacci</span><span class="o">.</span><span class="n">fib</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="go">2</span>
+</pre></div>
+</div>
+<p>Here we have imported a module named <code class="docutils literal notranslate"><span class="pre">my_module</span></code> and called a function named <code class="docutils literal notranslate"><span class="pre">my_function</span></code>.</p>
+<p>A package is a way of collecting several modules together under another common namespace.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fibonacci</span><span class="o">/</span>              <span class="c1"># Package</span>
+    <span class="fm">__init__</span><span class="o">.</span><span class="n">py</span>    <span class="c1"># Initialisation file</span>
+    <span class="n">module_02</span><span class="o">.</span><span class="n">py</span>   <span class="c1"># Module 2</span>
+</pre></div>
+</div>
+<p>Here we have a package named <code class="docutils literal notranslate"><span class="pre">my_package</span></code> which contains two modules imaginitivly named <code class="docutils literal notranslate"><span class="pre">module_01</span></code> and <code class="docutils literal notranslate"><span class="pre">module_02</span></code>.  When <code class="docutils literal notranslate"><span class="pre">my_package</span></code> is imported we will need to call the full function name such as <code class="docutils literal notranslate"><span class="pre">my_package.module_01.function()</span></code>.  However functions in each module only need to call the module name followed by the function such as <code class="docutils literal notranslate"><span class="pre">module_01.function()</span></code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://realpython.com/python-modules-packages/">RealPython Packages and Modules</a></p></li>
+<li><p><a class="reference external" href="https://the-hitchhikers-guide-to-packaging.readthedocs.io/en/latest/contributing.html">Packaging - PyPi</a></p></li>
+<li><p><a class="reference external" href="https://packaging.python.org/glossary/">Glossary</a></p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="package-layout">
+<h2><a class="toc-backref" href="#id24">Package Layout</a><a class="headerlink" href="#package-layout" title="Permalink to this headline">¶</a></h2>
+<p>Packages have a very simple layout.  Each module is inside a directory, the only requirements (other than standard python limits on what can be in a name) is that there must be a file called <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code>. This file can be empty, or it can contain an import statement which imports each module by name.</p>
+<p>There is a lot of flexibility in allowed in how a python package is laid out, and two main schools of thought on how to lay them out.  We recommend using the <code class="docutils literal notranslate"><span class="pre">src</span></code> layout. Here, all python packages are placed inside a directory called <code class="docutils literal notranslate"><span class="pre">src</span></code>. Then later when we get to tests and documentation, they are placed in their respective directories of <code class="docutils literal notranslate"><span class="pre">tests</span></code> and <code class="docutils literal notranslate"><span class="pre">docs</span></code>.  This gives a layout like so:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>project
+<span class="p">|</span>--docs
+<span class="p">|</span>--src
+<span class="p">|</span>   <span class="sb">`</span>--my_package
+<span class="p">|</span>          <span class="p">|</span>-- __init__.py
+<span class="p">|</span>          <span class="sb">`</span>-- my_module
+<span class="sb">`</span>--tests
+</pre></div>
+</div>
+<p>This layout will help when it comes to testing later on. For a description of why this layout is better see <a class="reference external" href="https://hynek.me/articles/testing-packaging/">Testing and Packaging by Hynek Schlawack</a>.  For now we shall create our package layout and our files.</p>
+<p>First lets create the directory layout</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir -p fibonacci-project/src/fibonacci
+</pre></div>
+</div>
+<p>and then create our module file inside <code class="docutils literal notranslate"><span class="pre">src/fibonacci</span></code> which we will call <code class="docutils literal notranslate"><span class="pre">fibonacci</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">fib</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
+    <span class="n">fib_number</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">n</span>
+    <span class="k">while</span> <span class="n">fib_number</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">:</span>
+        <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+        <span class="n">fib_number</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">b</span>
+</pre></div>
+</div>
+<p>we will then need to create an <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> to turn our directory with a module into a package.  The init file only needs to import our single module.</p>
+<p><code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> file
+.. code-block:: python</p>
+<blockquote>
+<div><p>import fibonacci</p>
+</div></blockquote>
+<div class="section" id="importing-modules">
+<h3><a class="toc-backref" href="#id25">Importing modules</a><a class="headerlink" href="#importing-modules" title="Permalink to this headline">¶</a></h3>
+<p>To test our package we can now import it. Since our package is located inside the <code class="docutils literal notranslate"><span class="pre">src</span></code> directory we cannot just import it as <cite>import fibonacci</cite> and as <code class="docutils literal notranslate"><span class="pre">src</span></code> does not contain and <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> we cannot import that either.  We need to move into the <code class="docutils literal notranslate"><span class="pre">src</span></code> directory (this is only needed for this quick test and example. In the next section we will create a <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> file that will allow us to install our package so we don’t have to be in the <code class="docutils literal notranslate"><span class="pre">src</span></code> directory.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ <span class="nb">cd</span> src/
+$ ipython
+</pre></div>
+</div>
+<p>In the command above we move into the <code class="docutils literal notranslate"><span class="pre">src</span></code> directory and then start python.  We could use just <code class="docutils literal notranslate"><span class="pre">python</span></code> but the tab completion and other features that come with <code class="docutils literal notranslate"><span class="pre">ipython</span></code> make it far easier to use.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">fibonacci</span>
+</pre></div>
+</div>
+<p>we can then call our function by doing</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">fibonacci</span><span class="o">.</span><span class="n">fibonacci</span><span class="o">.</span><span class="n">fib</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="go">2</span>
+</pre></div>
+</div>
+<p>this looks repetative and redundant, as we have two instances of ‘fibonacci’ in this function call. This is because the first fibonacci is the package (<code class="docutils literal notranslate"><span class="pre">fibonacci/</span></code>) and the second is the module (<code class="docutils literal notranslate"><span class="pre">fibonacci.py</span></code>). Both of these are namespaces used. We can avoid this long function call in a different ways:</p>
+<p>We could import the module from the package:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">fibonacci</span> <span class="kn">import</span> <span class="n">fibonacci</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fibonacci</span><span class="o">.</span><span class="n">fib</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>or we could import the module directly</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">fibonacci.fibonacci</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fibonacci</span><span class="o">.</span><span class="n">fib</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>it would be easier for the users of our package if they did not have to do this when importing our package. To avoid this we can change the contents of out <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> to import functions from our modules into the package which would allow us to call the function like so:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">fibonacci</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fibonacci</span><span class="o">.</span><span class="n">fib</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>There are two ways to do this. We can import an individual function or we can import the whole of a module. It is far easier to import the whole module, that way we don’t have to remember to update <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> each time we create a new object (recalling that everything, function, classes, and variables are objects in python).  The downide to this is that you then cannot have two functions of the same name in different modules as they will lose their module namespace and only have teh packages namespace. It would also mean that users have access to all objects in our modules, which we may not want.  In which case we can use the second method and import just the function from out module.</p>
+<p>to import the whole module out <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> should look like this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># import all the objects in the module &#39;fibonacci&#39;</span>
+<span class="kn">from</span> <span class="nn">.fibonacci</span> <span class="kn">import</span> <span class="o">*</span>
+</pre></div>
+</div>
+<p>note that the leading dot is needed (in python 3) to tell python where to begin looking for a module, and the asterix means all.</p>
+<p>to only import a single function (which makes little difference in our example as we only have one) we do this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#import just the named modules from &#39;fibonacci&#39;</span>
+<span class="kn">from</span> <span class="nn">.fibonacci</span> <span class="kn">import</span> <span class="n">fib</span>
+</pre></div>
+</div>
+<p>when someone imports fibonacci and calls <code class="docutils literal notranslate"><span class="pre">fibonacci.fib(3)</span></code> the action of importing and calling is the same for both. In the second <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> they will only have access to the named objects though.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p><a class="reference external" href="http://www.python.org/">Python</a></p></li>
+<li><p><a class="reference external" href="https://docs.python-guide.org/writing/structure/">Structuring your project</a></p></li>
+<li><p><a class="reference external" href="https://towardsdatascience.com/10-steps-to-set-up-your-python-project-for-success-14ff88b5d13">Steps to success</a></p></li>
+<li><p><a class="reference external" href="https://setuptools.readthedocs.io/en/latest/setuptools.html#using-find-packages">Setuptools</a></p></li>
+<li><p><a class="reference external" href="https://dev.to/codemouse92/dead-simple-python-project-structure-and-imports-38c6">Dead Simple Python: Project Structure and Imports</a></p></li>
+<li><p><a class="reference external" href="https://github.com/pypa/packaging.python.org/issues/320">pypa on layout</a></p></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="section" id="packaging">
+<h2><a class="toc-backref" href="#id26">Packaging</a><a class="headerlink" href="#packaging" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="setup-py">
+<h3><a class="toc-backref" href="#id27">setup.py</a><a class="headerlink" href="#setup-py" title="Permalink to this headline">¶</a></h3>
+<p>In the current way our package is structured, we have to be in the <code class="docutils literal notranslate"><span class="pre">src</span></code> directory in order to import our package into python. This makes it very hard to distribute or even use our package.  To solve this we will create a <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> file in our project directory which will use the <code class="docutils literal notranslate"><span class="pre">setuptools</span></code> package to allow us to install our package using the package managment system <code class="docutils literal notranslate"><span class="pre">pip</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">setup.py</span></code> files can get very complicated in big projects, and if you look at the <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> file for something like numpy, it runs to many lines. Luckily, for small projects we don’t need such a complicated file and to create it we essentailly have to just answer a few questions, that hopefully we know as the creator of our package.</p>
+<p>Lets look at the <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> file we need for our ‘fibonacci’ package.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">setuptools</span> <span class="kn">import</span> <span class="n">setup</span><span class="p">,</span> <span class="n">find_packages</span>
+
+<span class="n">setup</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;fibonacci&quot;</span><span class="p">,</span>
+    <span class="n">version</span><span class="o">=</span><span class="s2">&quot;0.1&quot;</span><span class="p">,</span>
+    <span class="n">author</span><span class="o">=</span><span class="s2">&quot;Robin Long&quot;</span><span class="p">,</span>
+    <span class="n">author_email</span><span class="o">=</span><span class="s2">&quot;robin.long1@hotmai.co.uk&quot;</span><span class="p">,</span>
+    <span class="n">url</span><span class="o">=</span><span class="s2">&quot;https://github.com/longr/python_packaging_example&quot;</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;A simple package containing a single module with a single function that finds the nth fibonacci number.&quot;</span><span class="p">,</span>
+    <span class="n">packages</span><span class="o">=</span><span class="n">find_packages</span><span class="p">(</span><span class="n">where</span><span class="o">=</span><span class="s2">&quot;src&quot;</span><span class="p">),</span>
+    <span class="n">package_dir</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;&quot;</span><span class="p">:</span><span class="s2">&quot;src&quot;</span><span class="p">},</span>
+    <span class="n">install_requires</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>There are quite a few things here so lets look at them.</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">name</span></code>: This is pretty self descriptive, it is just the name we wish to give the package. If we are going to upload this to PyPi it needs to be unique.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">version</span></code>: This is where you specify the version number.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">author</span></code>: Author or authors name(s).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">author_email</span></code>: email address(es) of the author(s).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">description</span></code>: Here we have a description of the package, this can be as short or as long as you need.  If it is particularly long, it might be best to split it out as a separate variable and set description equal to it.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">packages</span></code>: This needs to be the path to our package directory.  <code class="docutils literal notranslate"><span class="pre">setuptools</span></code> contains lots of helpful functions, and one of those is <code class="docutils literal notranslate"><span class="pre">find_packages</span></code> which will search in a given directory, in our case <code class="docutils literal notranslate"><span class="pre">src</span></code> and look for any directory that looks like a package. This is the only line you should change for your own package, the rest should be customised as needed.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">package_dir</span></code>: This takes a dictionary with <code class="docutils literal notranslate"><span class="pre">&quot;&quot;</span></code> as the key, and the directory our package is in as the value.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">install_requires</span></code> takes a python list of packages that our package depends on. At the minute we have no dependencies so it is blank.</p>
+<div class="admonition-todo admonition" id="id2">
+<p class="admonition-title">Todo</p>
+<p>What does package_dir do?</p>
+</div>
+</li>
+</ul>
+<p>It is worth noting that the main function we call, <code class="docutils literal notranslate"><span class="pre">setup()</span></code>, takes a series of comma separated arguments. It is quite happy to have comma after the last argument which makes adding and removing arguments easier.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://blog.ionelmc.ro/2014/05/25/python-packaging/">Packaging a python library</a></p></li>
+<li><p><a class="reference external" href="https://realpython.com/python-modules-packages/">RealPython Packages and Modules</a></p></li>
+<li><p><a class="reference external" href="https://dzone.com/articles/executable-package-pip-install">Build a pip packages</a></p></li>
+<li><p><a class="reference external" href="https://the-hitchhikers-guide-to-packaging.readthedocs.io/en/latest/contributing.html">Packaging - PyPi</a></p></li>
+<li><p><a class="reference external" href="https://packaging.python.org/tutorials/packaging-projects/#generating-distribution-archives">Packaging Python Projects</a></p></li>
+<li><p><a class="reference external" href="https://packaging.python.org/guides/packaging-binary-extensions/">Packaging binary extensions</a></p></li>
+<li><p><a class="reference external" href="https://setuptools.readthedocs.io/en/latest/setuptools.html#using-find-packages">Setuptools</a></p></li>
+<li><p><a class="reference external" href="https://blog.godatadriven.com/setup-py">Practical guide to Setup.py</a></p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="running-and-installing-the-package">
+<h3><a class="toc-backref" href="#id28">Running and installing the package</a><a class="headerlink" href="#running-and-installing-the-package" title="Permalink to this headline">¶</a></h3>
+<div class="admonition-todo admonition" id="id6">
+<p class="admonition-title">Todo</p>
+<p>Should we reintroduce venv here?</p>
+</div>
+<p>Now that we have created our <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> we can install and test our package.  To install our package we need to build it. This will create a tar.gz (or zip) file in a directory called <code class="docutils literal notranslate"><span class="pre">dist</span></code>.  This is a source distribution.  We can send this file to people and they will be able to install our package.</p>
+<p>To build the package, from our root directory (the one with the <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> file in it), we need to use the command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python setup.py sdist
+</pre></div>
+</div>
+<p>This will build the source distribution for us. The tar file that is created will be named <em>&lt;package_name&gt;-&lt;version&gt;</em> both of these values are taken from the lines in <code class="docutils literal notranslate"><span class="pre">setup.py</span></code>.  To install the package we just need to use pip.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install dist/fibonacci-0.1.tar.gz --user
+</pre></div>
+</div>
+<p>..Note if you are working inside a virtual enviroment (don’t worry if you don’t know what one is) you won’t need the <code class="docutils literal notranslate"><span class="pre">--user</span></code> flag.  This flag ensure that the package is installed to your local area and not system wide.</p>
+<p>We can now open up a python terminal and test our package:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">fibonacci</span>
+<span class="n">fibonacci</span><span class="o">.</span><span class="n">fib</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="mi">55</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>We will have to rebuild the source distribution, and reinstall it every time we make changes to our package.</p>
+</div>
+</div>
+<div class="section" id="build-and-distribute">
+<h3><a class="toc-backref" href="#id29">Build and distribute</a><a class="headerlink" href="#build-and-distribute" title="Permalink to this headline">¶</a></h3>
+<p>If we are not wanting to distribute our package (yet), then we can skip the build step and let <code class="docutils literal notranslate"><span class="pre">pip</span></code> do this for us in a temporary directory and install it in one command.</p>
+<p>Again, from the root directory,</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install . --user
+</pre></div>
+</div>
+<p>will build and install our package. As before, we will have to reinstall each time we make changes to our package.  We can skip this step by installing it in development or editable mode.  In this situation (as long as we are only python with no C/C++ code) we can edit our package and the changes will appear in our package as soon as we import it.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install -e .
+</pre></div>
+</div>
+<p>We can test this by making a quick change to our <code class="docutils literal notranslate"><span class="pre">fibonacci.py</span></code> file.</p>
+<div class="admonition-todo admonition" id="id7">
+<p class="admonition-title">Todo</p>
+<p>Talk about the following in package:
+* Manifest
+* Licence
+* Style Guide
+* Contributing</p>
+</div>
+</div>
+</div>
+<div class="section" id="testing-with-pytest">
+<h2><a class="toc-backref" href="#id30">Testing with pytest</a><a class="headerlink" href="#testing-with-pytest" title="Permalink to this headline">¶</a></h2>
+<div class="admonition-todo admonition" id="id8">
+<p class="admonition-title">Todo</p>
+<ul class="simple">
+<li><p>Need to redo with tox as introduced later on for travis</p></li>
+<li><p>Introduce venv for quick test?</p></li>
+</ul>
+</div>
+<p>We have written some software which is great. The software above does very little, but any you are writing for yourself will probably be to do research whose results can be published, or to produce software that can be published that will help other people do research. In which case the publishers and users (and you) need to have faith that the software works as it is meant to.  Since we are researchers we don’t want to go on faith alone, we want facts. We do this by testing our code.</p>
+<p>We can have these assurances by testing our code rigourously. There are many ways to do this, but the easiest and best is to use a testing framework for our chosen language.  For python there are a few options but (in the biased way this was intended and is written) we will look at <strong>pytest</strong>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">pytest</span></code> does not come in the standard python library, so we will need to install it first.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install pytest --user
+</pre></div>
+</div>
+<div class="section" id="layout">
+<h3><a class="toc-backref" href="#id31">Layout</a><a class="headerlink" href="#layout" title="Permalink to this headline">¶</a></h3>
+<p>Pytest supports two styles of layouts, as always we will look at just one.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>project
+<span class="p">|</span>--src
+<span class="p">|</span>   <span class="sb">`</span>--my_package
+<span class="p">|</span>          <span class="p">|</span>-- __init__.py
+<span class="p">|</span>          <span class="sb">`</span>-- my_module
+<span class="sb">`</span>--tests
+<span class="sb">`</span>--test_my_module.py
+</pre></div>
+</div>
+<p>Using this layout, pytest will be able to find and run your tests against your code. All tests should go in files beginning <code class="docutils literal notranslate"><span class="pre">test_</span></code> and should be inside our <code class="docutils literal notranslate"><span class="pre">test</span></code> directory.</p>
+</div>
+<div class="section" id="writing-tests">
+<h3><a class="toc-backref" href="#id32">Writing tests</a><a class="headerlink" href="#writing-tests" title="Permalink to this headline">¶</a></h3>
+<p>Pytest is a very powerful program, yet it has a simple syntax.</p>
+<p>Now that we have our layout, We can create the file <code class="docutils literal notranslate"><span class="pre">test/test_fibonacci.py</span></code> and put some tests in it to see if our code works.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># contents of test_fibonacci.py</span>
+<span class="kn">import</span> <span class="nn">pytest</span>
+<span class="kn">import</span> <span class="nn">fibonacci</span>
+
+<span class="k">def</span> <span class="nf">test_fib_check_zero</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="n">fibonacci</span><span class="o">.</span><span class="n">fib</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+</pre></div>
+</div>
+<p>To run these tests we need to call <code class="docutils literal notranslate"><span class="pre">pytest</span></code> on the command line.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ <span class="nv">pytest</span>
+<span class="o">==========================================</span> <span class="nb">test</span> session <span class="nv">starts</span> <span class="o">==========================================</span>
+platform linux -- Python <span class="m">3</span>.7.5, pytest-5.2.1, py-1.8.0, pluggy-0.12.0
+rootdir: /home/user/python_packaging_example
+plugins: flakes-4.0.0, cov-2.8.1, pep8-1.0.6
+collected <span class="m">1</span> item
+
+tests/test_fibonacci.py .                                                                         <span class="o">[</span><span class="m">100</span>%<span class="o">]</span>
+
+<span class="o">===========================================</span> <span class="m">1</span> passed in <span class="m">0</span>.02s <span class="o">===========================================</span>
+</pre></div>
+</div>
+<p>Pytest found our test file (<code class="docutils literal notranslate"><span class="pre">tests/test_fibonacci.py</span></code>) and 1 test (indicated by the ‘.’ after the file name).  It was that simple, but now lets look at the test file in more detail.</p>
+<p>The first thing we need to do is import the modules we need; at a minimum these should be pytest and our package, but we may need more depending on what we need to do.</p>
+<p>We then need to write our tests. Each test should begin with <code class="docutils literal notranslate"><span class="pre">test_</span></code>. Naming them like this ensures that <strong>pytest</strong> can find them. They should have a decriptive name that tells us what the test does, such as what function is called and what we are testing it for. The test function is then very simple. We can conduct many different tests in these functions, many of which are beyond the scope of this guide. We shall just look at assert for now.  <code class="docutils literal notranslate"><span class="pre">assert</span></code> will check that a conditional expression evaluates to <code class="docutils literal notranslate"><span class="pre">true</span></code>. In our case we have stated that <cite>fibonnaci.fib(0) == 0</cite>. When this function is run, a test will pass if the conditional evaluates to true.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Removed integration with setuptools as this is being depreciated and does not work properly.</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://hynek.me/articles/testing-packaging/">Packaging and Testing</a></p></li>
+<li><p><a class="reference external" href="https://docs.python-guide.org/writing/tests/">Hitch Hikers HGuide testing</a></p></li>
+<li><p><a class="reference external" href="http://rits.github-pages.ucl.ac.uk/research-se-python/morea/section2/reading3.html">UCL</a></p></li>
+<li><p><a class="reference external" href="https://docs.pytest.org/en/latest/">PyTest</a></p></li>
+<li><p><a class="reference external" href="https://realpython.com/python-testing/">RealPython Testing</a></p></li>
+<li><p><a class="reference external" href="https://pytest.readthedocs.io/en/2.7.3/goodpractises.html">Good practises</a></p></li>
+</ul>
+</div>
+<div class="admonition-todo admonition" id="id9">
+<p class="admonition-title">Todo</p>
+<ul class="simple">
+<li><p>Add extra sections? What makes a good tests and best practises.</p></li>
+<li><p>init.py in tests</p></li>
+<li><p>Should we use hypothesis?</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="code-coverage">
+<h3><a class="toc-backref" href="#id33">Code Coverage</a><a class="headerlink" href="#code-coverage" title="Permalink to this headline">¶</a></h3>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.willprice.dev/2019/01/03/python-code-coverage.html">Code coverage</a></p></li>
+</ul>
+</div>
+<div class="admonition-todo admonition" id="id11">
+<p class="admonition-title">Todo</p>
+<p>Re-do this section with tox as all other use it.</p>
+</div>
+<p>Testing will show us that (hopefully) those bits of code we tested worked as expected, but that is not the whole story. How much of our code has been tested? Having 100% of tests passing is great, but it means nothing if we have not tested all our code. So how do we check it is all being tested? We do this we code coverage.</p>
+<p>Coverage.py is capable of doing this very well. There is also a plugin for pytest called pytest-cov, which integrates coverage.py into pytest.  First, install pytest-cov with pip:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install pytest-cov
+</pre></div>
+</div>
+<p>and run it with the command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest --cov<span class="o">=</span>fibonacci
+</pre></div>
+</div>
+<p>this will produce the same output as when we ran pytest earlier, but it now includes a report on the code coverage like this:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>----------- coverage: platform linux, python <span class="m">3</span>.7.5-final-0 -----------
+Name                         Stmts   Miss Branch BrPart  Cover
+--------------------------------------------------------------
+src/fibonacci/__init__.py        <span class="m">1</span>      <span class="m">0</span>      <span class="m">0</span>      <span class="m">0</span>   <span class="m">100</span>%
+src/fibonacci/fibonacci.py       <span class="m">9</span>      <span class="m">4</span>      <span class="m">4</span>      <span class="m">1</span>    <span class="m">46</span>%
+--------------------------------------------------------------
+TOTAL                           <span class="m">10</span>      <span class="m">4</span>      <span class="m">4</span>      <span class="m">1</span>    <span class="m">50</span>%
+</pre></div>
+</div>
+<p>There is quite a bit of information here, but the key things are the filenames in the first column, and their associated coverage percentage in the final column.   We can get a more detailed report, which will tell us which lines of code were not tested, and which were by adding the flag <cite>–cov-report html</cite>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest --cov<span class="o">=</span>fibonacci --cov-report html
+</pre></div>
+</div>
+<p>This will generate a report in html format in a directory called <code class="docutils literal notranslate"><span class="pre">htmlcov</span></code>.  We can view this by opening <code class="docutils literal notranslate"><span class="pre">htmlcov/index.html</span></code> in a web browser.</p>
+</div>
+</div>
+<div class="section" id="better-testing-with-tox">
+<h2><a class="toc-backref" href="#id34">Better testing with Tox</a><a class="headerlink" href="#better-testing-with-tox" title="Permalink to this headline">¶</a></h2>
+<p>Currently we run our tests by just calling <code class="docutils literal notranslate"><span class="pre">pytest</span></code> on the command line.  If we use virtual enviroments, we can have some increased confidence in our code and tests as we know what package dependencies have been installed.  What happens when we need new packages in our tests, did we document this? What if we want to test against another version of python?  We can do all this with virtual enviroments, but <code class="docutils literal notranslate"><span class="pre">tox</span></code> makes this easier.</p>
+<p>Stolen from their own documentation, tox is a generic virtualenv management and test command line tool you can use for:</p>
+<ul class="simple">
+<li><p>checking your package installs correctly with different Python versions and interpreters</p></li>
+<li><p>running your tests in each of the environments, configuring your test tool of choice</p></li>
+<li><p>acting as a frontend to Continuous Integration servers, greatly reducing boilerplate and merging CI and shell-based testing.</p></li>
+</ul>
+<p>All of this makes tox a great tool and key one to use.</p>
+<div class="section" id="configuring-tox">
+<h3><a class="toc-backref" href="#id35">Configuring Tox</a><a class="headerlink" href="#configuring-tox" title="Permalink to this headline">¶</a></h3>
+<p>After some initialisation, tox will make running our tests easier and simpler.  Firstly we need to install tox, with pip the command is:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install tox
+</pre></div>
+</div>
+<p>Then we need to put information about our project into a file called <code class="docutils literal notranslate"><span class="pre">tox.ini</span></code>, this tells tox which tests we want to run, and which versisons of python to run those tests against.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># tox.ini</span>
+
+<span class="p">[</span><span class="n">tox</span><span class="p">]</span>
+<span class="n">envlist</span> <span class="o">=</span> <span class="n">py27</span><span class="p">,</span> <span class="n">py35</span><span class="p">,</span> <span class="n">py36</span><span class="p">,</span> <span class="n">py37</span><span class="p">,</span> <span class="n">py38</span>
+
+<span class="p">[</span><span class="n">testenv</span><span class="p">]</span>
+<span class="n">deps</span> <span class="o">=</span> <span class="o">-</span><span class="n">r</span><span class="p">{</span><span class="n">toxinidir</span><span class="p">}</span><span class="o">/</span><span class="n">requirements_test</span><span class="o">.</span><span class="n">txt</span>
+
+<span class="n">commands</span> <span class="o">=</span> <span class="n">pytest</span>
+</pre></div>
+</div>
+<p>Lets look at this file in detail.  First we have <code class="docutils literal notranslate"><span class="pre">[tox]</span></code> which will contain the global options we want to configure for tox.  The only option we have specified here is <code class="docutils literal notranslate"><span class="pre">envlist</span></code>, and we have listed five versions of python we wish to test against. Notice that these are abbreviated to <strong>py</strong> and the major and minor version numbers without a decimal point; as such python 3.6 becomes py36.</p>
+<p>The next section, <code class="docutils literal notranslate"><span class="pre">[testenv]</span></code>, specifies the options we want in our test environment. Tox will install our package inside the virtual environment, and will pickup the dependencies from <code class="docutils literal notranslate"><span class="pre">setup.py</span></code>; however, <code class="docutils literal notranslate"><span class="pre">setup.py</span></code>, does not contain information on the dependencies for our test environment, so we need to speciy these separatly.  Using the DRY (Don’t Repeat Yourself), the best way to specify this is using a requirements file to list the dependencies for running our tests.  We shall use a file called <code class="docutils literal notranslate"><span class="pre">requirements_test.txt</span></code> to list our depdencies. This file will contain each dependency on a separate line and should look like this for our package:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pytest</span>
+<span class="n">pytest</span><span class="o">-</span><span class="n">cov</span>
+</pre></div>
+</div>
+<p>This file should be located in our packages root file (where our setup.py file is located).  We can then tell tox about it by using <code class="docutils literal notranslate"><span class="pre">-r{toxinidir}/requirments_test.txt</span></code>. <code class="docutils literal notranslate"><span class="pre">{toxinidir}</span></code> is a tox variable which evalulates to the directory that the <code class="docutils literal notranslate"><span class="pre">tox.ini</span></code> file is located in (this is useful to ensure paths are correct).  Also note the lack of a space between <code class="docutils literal notranslate"><span class="pre">-r</span></code> and <code class="docutils literal notranslate"><span class="pre">{toxinidir}/requirements_test.txt</span></code>.</p>
+<p>The final part of the <code class="docutils literal notranslate"><span class="pre">tox.ini</span></code> file is the <code class="docutils literal notranslate"><span class="pre">commands</span></code> line, here we need to specify the command we wish to use to run our tests, in this case it is <code class="docutils literal notranslate"><span class="pre">pytest</span></code>.</p>
+</div>
+<div class="section" id="running-tox">
+<h3><a class="toc-backref" href="#id36">Running Tox</a><a class="headerlink" href="#running-tox" title="Permalink to this headline">¶</a></h3>
+<p>We can run our tests by calling <code class="docutils literal notranslate"><span class="pre">tox</span></code> on the command line:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ tox
+...
+py38 inst-nodeps: /home/longr/Public/PyCFFI/python_packaging_example/.tox/.tmp/package/1/fibonacci-0.1.zip
+py38 installed: <span class="nv">attrs</span><span class="o">==</span><span class="m">19</span>.3.0,coverage<span class="o">==</span><span class="m">4</span>.5.4,fibonacci<span class="o">==</span><span class="m">0</span>.1,more-itertools<span class="o">==</span><span class="m">7</span>.2.0,packaging<span class="o">==</span><span class="m">19</span>.2,pluggy<span class="o">==</span><span class="m">0</span>.13.1,py<span class="o">==</span><span class="m">1</span>.8.0,pyparsing<span class="o">==</span><span class="m">2</span>.4.5,pytest<span class="o">==</span><span class="m">5</span>.3.0,pytest-cov<span class="o">==</span><span class="m">2</span>.8.1,six<span class="o">==</span><span class="m">1</span>.13.0,wcwidth<span class="o">==</span><span class="m">0</span>.1.7
+py38 run-test-pre: <span class="nv">PYTHONHASHSEED</span><span class="o">=</span><span class="s1">&#39;545188176&#39;</span>
+py38 run-test: commands<span class="o">[</span><span class="m">0</span><span class="o">]</span> <span class="p">|</span> <span class="nv">pytest</span>
+<span class="o">===============================</span> <span class="nb">test</span> session <span class="nv">starts</span> <span class="o">==================================</span>
+platform linux -- Python <span class="m">3</span>.8.0, pytest-5.3.0, py-1.8.0, pluggy-0.13.1
+cachedir: .tox/py38/.pytest_cache
+rootdir: /home/longr/Public/PyCFFI/python_packaging_example
+plugins: cov-2.8.1
+collected <span class="m">3</span> items
+
+tests/test_fibonacci.py ...                                                     <span class="o">[</span><span class="m">100</span>%<span class="o">]</span>
+
+<span class="o">==============================</span> <span class="m">3</span> passed in <span class="m">0</span>.03s <span class="o">=====================================</span>
+___________________________________ summary __________________________________________
+py27: commands succeeded
+py36: commands succeeded
+py37: commands succeeded
+py38: commands succeeded
+congratulations :<span class="o">)</span>
+</pre></div>
+</div>
+<p>tox runs the tests we wrote for each of the versions of python specified in our <code class="docutils literal notranslate"><span class="pre">tox.ini</span></code>; Note that in the above output, we have truncated the output and shown the tests being run against the last version of python only.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>You may get errors when trying to run this on your own system.  This will because the various implementations are python will not be installed. By default only one version of python3 is installed.  To solve this we can ask tox to run against a single implementation by calling <cite>tox -e &lt;python_enviroment&gt;</cite>.  To run only python 3.7 we would call <cite>tox -e py37</cite>.</p>
+</div>
+</div>
+<div class="section" id="tox-and-code-coverage">
+<h3><a class="toc-backref" href="#id37">Tox and Code coverage</a><a class="headerlink" href="#tox-and-code-coverage" title="Permalink to this headline">¶</a></h3>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference external" href="https://pytest-cov.readthedocs.io/en/latest/tox.html">Tox and pyTest</a></p>
+</div>
+<p>Previously we used code coverage with pytest to see how much of our code has been covered by tests.  We can do this in tox aswell by adding the <cite>–cov fibonacci</cite> flag to <cite>command = pytest</cite> line in our tox.ini.</p>
+<p>One common problem people run into with pytest and tox is that <code class="docutils literal notranslate"><span class="pre">pytest-cov</span></code> will erase previous coverage data by default.  This is unwanted with <code class="docutils literal notranslate"><span class="pre">tox</span></code> as we want the combined coverage for multiple version (especially if we have lines of code that are only ran under certain versions).  To get the combined coverage we need to use <code class="docutils literal notranslate"><span class="pre">--cov-append</span></code>. As this will then keep the coverage data we need tox to clean up between runs, we can do this by creating a <code class="docutils literal notranslate"><span class="pre">[testenv:clean]</span></code> option and adding it to out <code class="docutils literal notranslate"><span class="pre">envlist</span></code>:</p>
+<p>..ignore the concept of parrallel, but see //pytest-cov.readthedocs.io/en/latest/tox.html if we plan to.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># tox.ini</span>
+
+<span class="p">[</span><span class="n">tox</span><span class="p">]</span>
+<span class="n">envlist</span> <span class="o">=</span> <span class="n">clean</span><span class="p">,</span> <span class="n">py27</span><span class="p">,</span> <span class="n">py35</span><span class="p">,</span> <span class="n">py36</span><span class="p">,</span> <span class="n">py37</span><span class="p">,</span> <span class="n">py38</span>
+
+<span class="p">[</span><span class="n">testenv</span><span class="p">]</span>
+<span class="n">deps</span> <span class="o">=</span> <span class="o">-</span><span class="n">r</span><span class="p">{</span><span class="n">toxinidir</span><span class="p">}</span><span class="o">/</span><span class="n">requirements_test</span><span class="o">.</span><span class="n">txt</span>
+<span class="n">commands</span> <span class="o">=</span> <span class="n">pytest</span> <span class="o">--</span><span class="n">cov</span> <span class="n">fibonnaci</span>
+
+<span class="p">[</span><span class="n">testenv</span><span class="p">:</span><span class="n">clean</span><span class="p">]</span>
+<span class="n">deps</span> <span class="o">=</span> <span class="n">coverage</span>
+<span class="n">skip_install</span> <span class="o">=</span> <span class="n">true</span>
+<span class="n">commands</span> <span class="o">=</span> <span class="n">coverage</span> <span class="n">erase</span>
+</pre></div>
+</div>
+<p>We can now run tox again and it will print out our coverage:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ tox
+...
+
+----------- coverage: platform linux, python <span class="m">3</span>.8.0-final-0 -----------
+Name                                                           Stmts   Miss  Cover
+----------------------------------------------------------------------------------
+.tox/py27/lib/python2.7/site-packages/fibonacci/__init__.py        <span class="m">1</span>      <span class="m">0</span>   <span class="m">100</span>%
+.tox/py27/lib/python2.7/site-packages/fibonacci/fibonacci.py       <span class="m">9</span>      <span class="m">0</span>   <span class="m">100</span>%
+.tox/py36/lib/python3.6/site-packages/fibonacci/__init__.py        <span class="m">1</span>      <span class="m">0</span>   <span class="m">100</span>%
+.tox/py36/lib/python3.6/site-packages/fibonacci/fibonacci.py       <span class="m">9</span>      <span class="m">0</span>   <span class="m">100</span>%
+.tox/py37/lib/python3.7/site-packages/fibonacci/__init__.py        <span class="m">1</span>      <span class="m">0</span>   <span class="m">100</span>%
+.tox/py37/lib/python3.7/site-packages/fibonacci/fibonacci.py       <span class="m">9</span>      <span class="m">0</span>   <span class="m">100</span>%
+.tox/py38/lib/python3.8/site-packages/fibonacci/__init__.py        <span class="m">1</span>      <span class="m">0</span>   <span class="m">100</span>%
+.tox/py38/lib/python3.8/site-packages/fibonacci/fibonacci.py       <span class="m">9</span>      <span class="m">0</span>   <span class="m">100</span>%
+----------------------------------------------------------------------------------
+TOTAL                                                             <span class="m">40</span>      <span class="m">0</span>   <span class="m">100</span>%
+
+
+<span class="o">================================</span> <span class="m">3</span> passed in <span class="m">0</span>.09s <span class="o">================================</span>
+______________________________________ summary ____________________________________
+ clean: commands succeeded
+ py27: commands succeeded
+ py36: commands succeeded
+ py37: commands succeeded
+ py38: commands succeeded
+ congratulations :<span class="o">)</span>
+</pre></div>
+</div>
+<p>The output above is truncated, but we can see that the list of files covered by the tests increase with each run as more files (in different virtual environments) are added to the coverage report.  You only need to have 100% coverage across all files, not in each one, to get 100% coverage.</p>
+</div>
+</div>
+<div class="section" id="tests-and-continuous-integration">
+<h2><a class="toc-backref" href="#id38">Tests and Continuous Integration</a><a class="headerlink" href="#tests-and-continuous-integration" title="Permalink to this headline">¶</a></h2>
+<p>We now have a python package that is installable, and has inbuilt tests and coverage reports - the later help build confidence in the packages reproducibility. We can ensure these tests are ran when we push our commits to github, this will give us confidence that our public code has always been tested, and show other users that its has been tested as well.</p>
+<p>We ensure that these tests are ran through Continuous Integration (CI), whereby each time we push a commit to github, it triggers scripts to be ran against the code, or through something called webhooks, triggers external services to run scripts against our repository.</p>
+<p>We will look first at <strong>TravisCI</strong> which will use tox to test our code, and then codecov.io which will generate and host pretty code coverage reports for our code.</p>
+<div class="section" id="travisci">
+<h3><a class="toc-backref" href="#id39">TravisCI</a><a class="headerlink" href="#travisci" title="Permalink to this headline">¶</a></h3>
+<p>To use TravisCI we need to create an account with TravisCI, and grant it access to the repository that conatins your code.  To do this just go to <a class="reference external" href="https://travis-ci.com/">Travis CI</a> and sign up with your Github account.</p>
+<div class="admonition-todo admonition" id="id12">
+<p class="admonition-title">Todo</p>
+<ul class="simple">
+<li><p>Add setting up travis on github and getting account</p></li>
+</ul>
+</div>
+<p>TravisCI provides virtual machines that our package is built and ran on, this allows us to test against multiple versions of python, and against different operating systems.  We will also use an extra package called <code class="docutils literal notranslate"><span class="pre">tox-travis</span></code> which makes it easier to use tox and travis together.</p>
+<p>We specify what we want travis to run using the file <code class="docutils literal notranslate"><span class="pre">.travis.yml</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">language</span><span class="p">:</span> <span class="n">python</span>
+
+<span class="n">python</span><span class="p">:</span>
+  <span class="o">-</span> <span class="s2">&quot;2.7&quot;</span>
+  <span class="o">-</span> <span class="s2">&quot;3.5&quot;</span>
+  <span class="o">-</span> <span class="s2">&quot;3.6&quot;</span>
+  <span class="o">-</span> <span class="s2">&quot;3.7&quot;</span>
+  <span class="o">-</span> <span class="s2">&quot;3.8&quot;</span>
+
+<span class="n">install</span><span class="p">:</span>
+  <span class="o">-</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">tox</span><span class="o">-</span><span class="n">travis</span>
+
+<span class="n">script</span><span class="p">:</span>
+  <span class="o">-</span> <span class="n">tox</span> <span class="o">-</span><span class="n">vv</span>
+</pre></div>
+</div>
+<p>There are quite a few things specified here so lets look at them one at a time.</p>
+<p><cite>language: python</cite> specifies the programming language we will be using.</p>
+<p><code class="docutils literal notranslate"><span class="pre">python:</span></code> is a list of the python versions we want to run against.</p>
+<p><code class="docutils literal notranslate"><span class="pre">install:</span></code> is a list of things we need installing before we can run.  As our package dependencies and test dependencies are already in <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> and <code class="docutils literal notranslate"><span class="pre">tox.ini</span></code> we only need to specify one extra package which is tox-travis.  tox-travis is a package that makes running tox and travis together a little simpler and removes the need to type as much in the <code class="docutils literal notranslate"><span class="pre">.travis.yml</span></code> file.</p>
+<p><code class="docutils literal notranslate"><span class="pre">script:</span></code> is a list of commands and scripts to run for each version of python.  In our case we just want to run tox; the <code class="docutils literal notranslate"><span class="pre">-vv</span></code> is enabling extra verbosity from tox, just incase we have errors.</p>
+<p>Now, each time we issue a <cite>git push</cite> and our commits are sent to github, these test will be ran.  We can tell everyone about how our tests are being passed by adding a badge to our README.md. The code we will need to add to our README.md will look similar to this:</p>
+<div class="highlight-rest notranslate"><div class="highlight"><pre><span></span>[![Build Status](https://travis-ci.org/longr/cffi_example.svg?branch=master)](https://travis-ci.org/longr/cffi_example)
+</pre></div>
+</div>
+<p>You can get the badge for your package by going to:</p>
+<div class="admonition-todo admonition" id="id13">
+<p class="admonition-title">Todo</p>
+<ul class="simple">
+<li><p>Add instructions on getting badge.</p></li>
+</ul>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://blog.travis-ci.com/2019-08-07-extensive-python-testing-on-travis-ci">Extensive Python Testing on Travis CI</a></p></li>
+<li><p><a class="reference external" href="https://hackernoon.com/untold-stories-about-python-unit-tests-a141501f0ee">Untold stories about python unit tests</a></p></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="section" id="test-coverage">
+<h2><a class="toc-backref" href="#id40">Test coverage</a><a class="headerlink" href="#test-coverage" title="Permalink to this headline">¶</a></h2>
+<p>Now that we have tests working with continuous integration we can expand this to code coverage.  The first thing we need to do is signup for an account on <a class="reference external" href="https://codecov.io/">Codecov</a> which just requires us to log in with our GitHub account.  Then we have to add the relevant lines to our <code class="docutils literal notranslate"><span class="pre">.travis.yml</span></code> so that it looks like this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">language</span><span class="p">:</span> <span class="n">python</span>
+
+<span class="n">python</span><span class="p">:</span>
+  <span class="o">-</span> <span class="s2">&quot;2.7&quot;</span>
+  <span class="o">-</span> <span class="s2">&quot;3.5&quot;</span>
+  <span class="o">-</span> <span class="s2">&quot;3.6&quot;</span>
+  <span class="o">-</span> <span class="s2">&quot;3.7&quot;</span>
+  <span class="o">-</span> <span class="s2">&quot;3.8&quot;</span>
+
+<span class="n">install</span><span class="p">:</span>
+  <span class="o">-</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">tox</span><span class="o">-</span><span class="n">travis</span> <span class="n">codecov</span>
+
+<span class="n">script</span><span class="p">:</span>
+  <span class="o">-</span> <span class="n">tox</span> <span class="o">-</span><span class="n">vv</span>
+
+<span class="n">after_success</span><span class="p">:</span>
+  <span class="o">-</span> <span class="n">codecov</span>
+</pre></div>
+</div>
+<p>We have now added <code class="docutils literal notranslate"><span class="pre">codecov</span></code> as a dependency under <code class="docutils literal notranslate"><span class="pre">install:</span></code>, and a new section labelled <code class="docutils literal notranslate"><span class="pre">after_success`:</span></code>; this section contains the commands to run once all our <code class="docutils literal notranslate"><span class="pre">script:</span></code> jobs have been run successfully. We have added one entry, <code class="docutils literal notranslate"><span class="pre">codecov</span></code>.  As long as we have a public GitHub account, and a codecov.io account, this will send our coverage report to codecov.io.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://stackoverflow.com/questions/21991765/how-to-generate-coverage-from-setup-py">Pytest and coverage</a></p></li>
+<li><p><a class="reference external" href="http://doc.pytest.org/en/latest/pythonpath.html#pytest-vs-python-m-pytest">pytest import issues</a></p></li>
+<li><p><a class="reference external" href="https://dev.to/j0nimost/using-codecov-with-travis-ci-pytest-cov-1dfj">Codecov + python + travis</a></p></li>
+<li><p><a class="reference external" href="https://docs.codecov.io/docs/codecov-yaml">exclude files from codecov</a></p></li>
+<li><p><a class="reference external" href="https://medium.com/datadriveninvestor/beginners-guide-to-using-codecov-with-python-and-travis-ci-c17659bb711">Codecov + python + travis beginners</a></p></li>
+<li><p><a class="reference external" href="https://docs.codecov.io/docs/codecov-yaml">Codecov yaml</a></p></li>
+</ul>
+</div>
+<div class="admonition-todo admonition" id="id14">
+<p class="admonition-title">Todo</p>
+<p>Testing on multiple OS’s
+* <a class="reference external" href="https://docs.travis-ci.com/user/multi-os/">Testing Your Project on Multiple Operating Systems</a>
+* <a class="reference external" href="https://docs.travis-ci.com/user/reference/windows/">Windows build on Travis</a></p>
+</div>
+</div>
+<div class="section" id="documentation">
+<h2><a class="toc-backref" href="#id41">Documentation</a><a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h2>
+<div class="admonition-todo admonition" id="id15">
+<p class="admonition-title">Todo</p>
+<p>Add description of how to document and different types
+<a class="reference external" href="https://realpython.com/documenting-python-code/">Documenting Python</a></p>
+</div>
+<p>One of the main tasks we need to do for our project, and the most over looked is to document it.  As usual, there are many ways to do this, but only one that we will look at.  We will use a python program called <strong>sphinx</strong>, which converts reStructuredText (.rst) files into our choice of html, pdf, and epub.  We can choose to do all or some of these.</p>
+<p>The first things we need to do is create a directory to store our documentation in, by convention this should be called <code class="docutils literal notranslate"><span class="pre">docs</span></code>. We then need to <code class="docutils literal notranslate"><span class="pre">cd</span></code> into this directory and set it up.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ mkdir docs
+$ <span class="nb">cd</span> docs
+</pre></div>
+</div>
+<p>We will need to install sphinx before we can go any further with setting up our documentation. We do this using pip:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ pip install sphinx
+</pre></div>
+</div>
+<p>Then we can setup our documentation. Sphinx needs a configuration file named <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> and a few additional files for building the documentation.  We can generate all of these using a command called <code class="docutils literal notranslate"><span class="pre">sphinx-quickstart</span></code>. There are two ways to do this, and both result in the same setup. We can run the command by itself and it will ask us questions that we need to enter; some of these need specific answers, and for others we can use the default options. To do this, just type <code class="docutils literal notranslate"><span class="pre">sphinx-quickstart</span></code> from inside the <code class="docutils literal notranslate"><span class="pre">docs</span></code> directory, and accept the default answers (by pressing <em>enter</em>) except for the following (answers in bold):</p>
+<ul class="simple">
+<li><p><cite>Separate source and build directories (y/n) [n]:</cite> <strong>y</strong></p></li>
+<li><p><cite>Project name:</cite> Enter the name of the project, this should be the same name as we used for our package, in this case <strong>fibonacci</strong>.</p></li>
+<li><p><cite>Author name(s):</cite> This wants to be the author(s) names, for me that is ‘Robin Long’</p></li>
+<li><p><cite>Project release</cite>: This is the current version of the project, 0.1 for example.</p></li>
+<li><p><cite>Project language</cite>: This is what language the project is in, the default in <strong>en</strong> (english)</p></li>
+<li><p><cite>Source file suffix [.rst]</cite>: This is the file extention for any files we want included in our documentation, the default (<strong>rst</strong>) is correct.</p></li>
+<li><p><cite>Name of your master document (without suffix) [index]</cite>: Accept the default here, this is the name of main file that all others will be linked from.</p></li>
+</ul>
+<p>There will be a series of questions now, where the default answer will be no, it is fine to just accept these.</p>
+<ul class="simple">
+<li><p><cite>Create Makefile? (y/n) [y]</cite>: This will create a Makefile making it easier to build the documentation, the default <strong>y</strong> is correct.</p></li>
+<li><p><cite>Create Windows command file? (y/n) [y]</cite>: This is the same, but for windows, accepting the default is fine.</p></li>
+</ul>
+<p>This should create a directory stucture that looks like this:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docs/
+├── build
+├── conf.bk
+├── make.bat
+├── Makefile
+└── <span class="nb">source</span>
+    ├── conf.py
+    ├── index.rst
+    ├── _static
+    └── _templates
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you want to avoid going through all those prompts, the same can be achieved with a long command line. Remember to replace project name (<code class="docutils literal notranslate"><span class="pre">-p</span></code>), author (<code class="docutils literal notranslate"><span class="pre">-a</span></code>), release (<code class="docutils literal notranslate"><span class="pre">-r</span></code>) and version (<code class="docutils literal notranslate"><span class="pre">-v</span></code>). If needed also replace language (<code class="docutils literal notranslate"><span class="pre">-l</span></code>).
+<cite>sphinx-quickstart -p ‘fibonacci’  -a ‘Robin Long’ -v ‘0.1’ -r ‘0.1’ –makefile -q –sep -l en</cite></p>
+</div>
+<p>Before we go any further we should make some changes to the default configuration file, <code class="docutils literal notranslate"><span class="pre">source/conf.py</span></code>.  We need to uncomment the following lines:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#import os</span>
+<span class="c1">#import sys</span>
+<span class="c1">#sys.path.insert(0, os.path.abspath(&#39;.&#39;))</span>
+</pre></div>
+</div>
+<p>and add in the correct path to our python module so that is now reads:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="s1">&#39;../../src/&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The path <code class="docutils literal notranslate"><span class="pre">../../src</span></code> is a relative path from the <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> file is, which should be <code class="docutils literal notranslate"><span class="pre">&lt;root_project_dir&gt;/docs/source/</span></code>; to where our package is which should be <code class="docutils literal notranslate"><span class="pre">&lt;root_project_dir&gt;/src</span></code>.</p>
+</div>
+<p>The next thing we need to do (which is encouraged, but optional) is change the theme to one that is a lot nicer. Just find the line beginning <code class="docutils literal notranslate"><span class="pre">html_theme</span></code> and change it from:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">html_theme</span> <span class="o">=</span> <span class="s1">&#39;alabaster&#39;</span>
+</pre></div>
+</div>
+<p>to</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">html_theme</span> <span class="o">=</span> <span class="s1">&#39;sphinx_rtd_theme&#39;</span>
+</pre></div>
+</div>
+<p>Using this theme will require an extra package to be installed. From within our virtual environment we do:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ pip install sphinx_rtd_theme
+</pre></div>
+</div>
+<div class="section" id="building-the-documentation">
+<h3><a class="toc-backref" href="#id42">Building the documentation</a><a class="headerlink" href="#building-the-documentation" title="Permalink to this headline">¶</a></h3>
+<p>Now that we have setup the documentation we want to test it compiles and build it.  We can do this using the make file. There are several options that we can pass to the make file depending upon what output we would like, generally we will want the output to be a webpage, a pdf file, or an epub file.  We can build these by passing the relevant option. To build the documentation as a webpage, from our root project directory, do the following:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ make -C docs html
+</pre></div>
+</div>
+<p><cite>-C docs</cite> tells <code class="docutils literal notranslate"><span class="pre">make</span></code> to change to the <code class="docutils literal notranslate"><span class="pre">docs</span></code> directory before building and <code class="docutils literal notranslate"><span class="pre">html</span></code> tells it we want to build a webpage as the output. The webpage will be built in <code class="docutils literal notranslate"><span class="pre">docs/build/html</span></code>. We can view the page by opening <code class="docutils literal notranslate"><span class="pre">docs/build/html/index.html</span></code>.  On linux this is done on the command line using one of the following:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ <span class="c1"># Google Chrome</span>
+$ google-chrome docs/build/html/index.html
+$ <span class="c1"># Firefox</span>
+$ firefox docs/build/html/index.html
+</pre></div>
+</div>
+<p>It would be better, if like the testing, we build our documentation in a virtual enviroment so that when we distribute our package it will be clear how to build, and we can be sure it works.</p>
+<p>First lets edit <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> to let it know what dependencies we need for building the documentation:</p>
+<ul class="simple">
+<li><p>We need to add a list containing the required packages.</p></li>
+<li><p>Add a key value pair to <code class="docutils literal notranslate"><span class="pre">extras_requires</span></code> linking the packages to a name.</p></li>
+</ul>
+<p>Our <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> should now look like this (some lines ommitted)</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="kn">from</span> <span class="nn">setuptools</span> <span class="kn">import</span> <span class="n">setup</span><span class="p">,</span> <span class="n">find_packages</span>
+
+<span class="n">install_requires</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="n">tests_require</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;pytest&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;pytest-cov&#39;</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="hll"><span class="n">docs_require</span> <span class="o">=</span> <span class="p">[</span>
+</span><span class="hll">    <span class="s1">&#39;sphinx&#39;</span><span class="p">,</span>
+</span><span class="hll">    <span class="s1">&#39;sphinx_rtd_theme&#39;</span><span class="p">,</span>
+</span><span class="p">]</span>
+
+<span class="n">setup</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;fibonacci&quot;</span><span class="p">,</span>
+    <span class="n">version</span><span class="o">=</span><span class="s2">&quot;0.1&quot;</span><span class="p">,</span>
+    <span class="n">author</span><span class="o">=</span><span class="s2">&quot;Robin Long&quot;</span><span class="p">,</span>
+    <span class="n">author_email</span><span class="o">=</span><span class="s2">&quot;robin.long1@hotmai.co.uk&quot;</span><span class="p">,</span>
+    <span class="n">url</span><span class="o">=</span><span class="s2">&quot;https://github.com/longr/python_packaging_example&quot;</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;A simple example package.&quot;</span><span class="p">,</span>
+    <span class="n">packages</span><span class="o">=</span><span class="n">find_packages</span><span class="p">(</span><span class="n">where</span><span class="o">=</span><span class="s2">&quot;src&quot;</span><span class="p">),</span>
+    <span class="n">package_dir</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;&quot;</span><span class="p">:</span> <span class="s2">&quot;src&quot;</span><span class="p">},</span>
+    <span class="n">install_requires</span><span class="o">=</span><span class="n">install_requires</span><span class="p">,</span>
+    <span class="n">tests_require</span><span class="o">=</span><span class="n">tests_require</span><span class="p">,</span>
+<span class="hll">    <span class="n">extras_require</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;testing&#39;</span><span class="p">:</span> <span class="n">tests_require</span><span class="p">,</span>
+</span>                    <span class="s1">&#39;docs&#39;</span><span class="p">:</span> <span class="n">docs_require</span><span class="p">,},</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Adding key-value pairs to <code class="docutils literal notranslate"><span class="pre">extras_requires</span></code> means that we have optional packages that can be installed using pip by calling <cite>pip install package[optional]</cite>, for our package, <code class="docutils literal notranslate"><span class="pre">fibonacci</span></code>, this would be <cite>pip install fibonacci[docs]</cite>.</p>
+</div>
+<p>Now that we have added the dependencies needed for our documentation to <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> we can add an entry in tox to build the docs in a virtual enviroment. We just need to add these extra configurations to the end of our tox.ini file:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">testenv</span><span class="p">:</span><span class="n">docs</span><span class="p">]</span>
+<span class="n">basepython</span> <span class="o">=</span> <span class="n">python3</span>
+<span class="n">whitelist_externals</span> <span class="o">=</span> <span class="n">make</span>
+<span class="n">extras</span> <span class="o">=</span>
+    <span class="n">docs</span>
+<span class="n">commands</span> <span class="o">=</span>
+    <span class="n">make</span> <span class="o">-</span><span class="n">C</span> <span class="n">docs</span> <span class="n">html</span> <span class="s2">&quot;SPHINXOPTS=-W -E&quot;</span>
+</pre></div>
+</div>
+<p>This is similar to what we have before. The firstline, <cite>basepython = python3</cite> insturcts tox to build the documentation under python3 (instead of python2). For any external command (outside of python) that we wish to use we need to whitelist it; we do this as <cite>whitelist_externals = make</cite>. The next two are similar to what we have seen before: <strong>extras</strong> is the key from <code class="docutils literal notranslate"><span class="pre">setup.py</span></code>; <strong>commands</strong> is the command needed to build the documentation that we used previously. The main difference is that we have added <cite>“SPHINXOPTS=-W -E”. These pass extra flags to the sphinx-build command. `</cite>-W`` turns warnings into errors, this prevents us building when we have warnings. <code class="docutils literal notranslate"><span class="pre">-E</span></code> forces sphinx to re-read all files for each build.</p>
+<p>We can now build our documentation with tox:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tox -e docs
+</pre></div>
+</div>
+<p>We can add more options to tox for the different kinds of documentation we want to produce. We just need to change the env name (the text after <code class="docutils literal notranslate"><span class="pre">testenv:</span></code>) and the output type for sphinx.  Here is pdf and epub (note, pdf requires latex to be installed).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">testenv</span><span class="p">:</span><span class="n">pdf</span><span class="p">]</span>
+<span class="n">basepython</span> <span class="o">=</span> <span class="n">python3</span>
+<span class="n">whitelist_externals</span> <span class="o">=</span> <span class="n">make</span>
+<span class="n">extras</span> <span class="o">=</span>
+    <span class="n">docs</span>
+<span class="n">commands</span> <span class="o">=</span>
+    <span class="n">make</span> <span class="o">-</span><span class="n">C</span> <span class="n">docs</span> <span class="n">pdflatex</span> <span class="s2">&quot;SPHINXOPTS=-W -E&quot;</span>
+
+<span class="p">[</span><span class="n">testenv</span><span class="p">:</span><span class="n">epub</span><span class="p">]</span>
+<span class="n">basepython</span> <span class="o">=</span> <span class="n">python3</span>
+<span class="n">whitelist_externals</span> <span class="o">=</span> <span class="n">make</span>
+<span class="n">extras</span> <span class="o">=</span>
+    <span class="n">docs</span>
+<span class="n">commands</span> <span class="o">=</span>
+    <span class="n">make</span> <span class="o">-</span><span class="n">C</span> <span class="n">docs</span> <span class="n">epub</span> <span class="s2">&quot;SPHINXOPTS=-W -E&quot;</span>
+</pre></div>
+</div>
+<p>If we wished, we could build all in one go with:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">testenv</span><span class="p">:</span><span class="n">pdf</span><span class="p">]</span>
+<span class="n">basepython</span> <span class="o">=</span> <span class="n">python3</span>
+<span class="n">whitelist_externals</span> <span class="o">=</span> <span class="n">make</span>
+<span class="n">extras</span> <span class="o">=</span>
+    <span class="n">docs</span>
+<span class="n">commands</span> <span class="o">=</span>
+    <span class="n">make</span> <span class="o">-</span><span class="n">C</span> <span class="n">docs</span> <span class="n">pdflatex</span> <span class="n">html</span> <span class="n">epub</span> <span class="s2">&quot;SPHINXOPTS=-W -E&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="writing-documentation-in-sphinx">
+<h3><a class="toc-backref" href="#id43">Writing Documentation in Sphinx</a><a class="headerlink" href="#writing-documentation-in-sphinx" title="Permalink to this headline">¶</a></h3>
+<p>We can now create our documentation.  Everything should be written in <code class="docutils literal notranslate"><span class="pre">.rst</span></code> files in <code class="docutils literal notranslate"><span class="pre">docs/source/</span></code>.</p>
+<div class="admonition-todo admonition" id="id16">
+<p class="admonition-title">Todo</p>
+<ul class="simple">
+<li><p>Add reST primer.</p></li>
+<li><p>Discuss types of documenation?</p></li>
+</ul>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://brandons-sphinx-tutorial.readthedocs.io/en/latest/quick-sphinx.html">Quick reST guide</a></p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="automatic-documentation">
+<h3><a class="toc-backref" href="#id44">Automatic Documentation</a><a class="headerlink" href="#automatic-documentation" title="Permalink to this headline">¶</a></h3>
+<p>Sphinx also has very helpful plugins that allow us to automatically generate API, documentation for the docstrings in our code. This means that users will be able to quickly access information on the functions contained with in our code and how to use them.</p>
+<p>To use this, we need to tell sphinx which extentions to use. We can do this by editting the following line in <code class="docutils literal notranslate"><span class="pre">docs/source/conf.py</span></code> to look like this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">extensions</span> <span class="o">=</span> <span class="p">[</span>
+ <span class="s1">&#39;sphinx.ext.autodoc&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;sphinx.ext.napoleon&#39;</span><span class="p">,</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">sphinx.ext.autodoc</span></code> is the extention that will build the API documentation</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sphinx.ext.napoleon</span></code> enables autodoc to understand numpy style doc strings which are easier to read.</p></li>
+</ul>
+<p>Whilst we said the documentation is generated automatically we do need to do a little work; we have to tell sphinx which modules to automatically document. We do this be creating a file called <code class="docutils literal notranslate"><span class="pre">docs/source/fibonacci.rst</span></code> (named after our package) with the following lines in it:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">..</span> <span class="n">automodule</span><span class="p">::</span> <span class="n">fibonacci</span><span class="o">.</span><span class="n">fibonacci</span>
+   <span class="p">:</span><span class="n">members</span><span class="p">:</span>
+</pre></div>
+</div>
+<p>We then need to link to this from <code class="docutils literal notranslate"><span class="pre">index.rst</span></code>. The simplest way is to put it into the contents of <code class="docutils literal notranslate"><span class="pre">index.rst</span></code>. Edit <code class="docutils literal notranslate"><span class="pre">index.rst</span></code> so that the contents now shows:</p>
+<div class="highlight-rest notranslate"><div class="highlight"><pre><span></span><span class="p">..</span> <span class="ow">toctree</span><span class="p">::</span>
+   <span class="nc">:maxdepth:</span> 2
+   <span class="nc">:caption:</span> Contents:
+
+   fibonacci
+</pre></div>
+</div>
+<p>Be very careful about the indentation. We call the file by its name without <code class="docutils literal notranslate"><span class="pre">.rst</span></code> on the end, but we must ensure its indent is correct.</p>
+<p>Now when we use the <code class="docutils literal notranslate"><span class="pre">make</span></code> command, or more correctly use <cite>tox -e docs</cite> to build our documentation it will build the API documentation as well.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>As our project progress it might make sense to split this into more files; perhaps one called <code class="docutils literal notranslate"><span class="pre">modules.rst</span></code> which links to all the others with one <code class="docutils literal notranslate"><span class="pre">.rst</span></code> file per module/sub-module.</p>
+</div>
+<div class="admonition-todo admonition" id="id17">
+<p class="admonition-title">Todo</p>
+<ul class="simple">
+<li><p>Which first User, or guide?  Guide as depends on user.</p></li>
+</ul>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference external" href="https://medium.com/&#64;eikonomega/getting-started-with-sphinx-autodoc-part-1-2cebbbca5365">Sphinx and Autodoc</a></p>
+</div>
+</div>
+<div class="section" id="testing-documentation-with-doctest">
+<h3><a class="toc-backref" href="#id45">Testing documentation with Doctest</a><a class="headerlink" href="#testing-documentation-with-doctest" title="Permalink to this headline">¶</a></h3>
+<p>Sphinx has another extention which is very useful called <strong>doctest</strong>. This allows us to test the example code in our docstrings, and in our general documentation to see if the presented output is correct.  To enable this we need to add another extension to <code class="docutils literal notranslate"><span class="pre">docs/source/conf.py</span></code>. In <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> find where the python list <code class="docutils literal notranslate"><span class="pre">extensions</span></code> is defined and add <code class="docutils literal notranslate"><span class="pre">sphinx.ext.doctest</span></code> so that is looks like the following:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">extensions</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;sphinx.ext.autodoc&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;sphinx.ext.napoleon&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;sphinx.ext.doctest&#39;</span><span class="p">,</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<p>We then need to add a new tox environment to be able to run this extension.  Add the following environment to your <code class="docutils literal notranslate"><span class="pre">tox.ini</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">testenv</span><span class="p">:</span><span class="n">doctest</span><span class="p">]</span>
+<span class="n">basepython</span> <span class="o">=</span> <span class="n">python3</span>
+<span class="n">whitelist_externals</span> <span class="o">=</span> <span class="n">make</span>
+<span class="n">extras</span> <span class="o">=</span> <span class="n">docs</span>
+<span class="n">commands</span> <span class="o">=</span> <span class="n">make</span> <span class="o">-</span><span class="n">C</span> <span class="n">docs</span> <span class="n">doctest</span> <span class="s2">&quot;SPHINXOPTS=-W -E&quot;</span>
+</pre></div>
+</div>
+<p>This is very similar to what we had for building our documentation except that <code class="docutils literal notranslate"><span class="pre">make</span></code> now has <code class="docutils literal notranslate"><span class="pre">doctest</span></code> as the target.  As ususal we can run this by calling tox.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ tox -e doctest
+$ tox -e doctest
+...
+lines removed
+...
+Running Sphinx v2.2.1
+building <span class="o">[</span>mo<span class="o">]</span>: targets <span class="k">for</span> <span class="m">0</span> po files that are out of date
+building <span class="o">[</span>doctest<span class="o">]</span>: targets <span class="k">for</span> <span class="m">2</span> <span class="nb">source</span> files that are out of date
+updating environment: <span class="o">[</span>new config<span class="o">]</span> <span class="m">2</span> added, <span class="m">0</span> changed, <span class="m">0</span> removed
+reading sources... <span class="o">[</span> <span class="m">50</span>%<span class="o">]</span> fibonacci
+reading sources... <span class="o">[</span><span class="m">100</span>%<span class="o">]</span> index
+
+looking <span class="k">for</span> now-outdated files... none found
+pickling environment... <span class="k">done</span>
+checking consistency... <span class="k">done</span>
+running tests...
+
+Doctest <span class="nv">summary</span>
+<span class="o">===============</span>
+    <span class="m">0</span> tests
+    <span class="m">0</span> failures in tests
+    <span class="m">0</span> failures in setup code
+    <span class="m">0</span> failures in cleanup code
+build succeeded.
+
+Testing of doctests in the sources finished, look at the results in build/doctest/output.txt.
+</pre></div>
+</div>
+<p>We can see that this succeeds, 0 test are found, and 0 failed.  Great! now lets add some tests. <code class="docutils literal notranslate"><span class="pre">doctest</span></code> assumes that anywhere it sees <code class="docutils literal notranslate"><span class="pre">&gt;&gt;&gt;</span></code> in docstrings or documentation, is a python prompt it should test. It will look for code snippets that look like this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="mi">4</span><span class="o">+</span><span class="mi">9</span>
+<span class="go">13</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">doctest</span></code> will assume that <code class="docutils literal notranslate"><span class="pre">4+9</span></code> is python code as the line starts with <code class="docutils literal notranslate"><span class="pre">&gt;&gt;&gt;</span></code>, and that the next line is the expected output since it does not start with <code class="docutils literal notranslate"><span class="pre">&gt;&gt;&gt;</span></code>.</p>
+<p>Lets try adding an example to our fibonacci functions docstring.  Open up <code class="docutils literal notranslate"><span class="pre">fibonacci.py</span></code> and add an example to the end of our docstring so it now reads:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Calculates the value of the nth fibonnaci number.</span>
+
+<span class="sd">Function takes a single input, n, the nth fibonacci number, and returns</span>
+<span class="sd">its value.</span>
+
+<span class="sd">Parameters</span>
+<span class="sd">----------</span>
+<span class="sd">n : int</span>
+<span class="sd">    nth fibonacci number</span>
+
+<span class="sd">Returns</span>
+<span class="sd">-------</span>
+<span class="sd">int</span>
+<span class="sd">    The value of the nth fibonacci number.</span>
+
+<span class="hll"><span class="sd">Examples</span>
+</span><span class="hll"><span class="sd">--------</span>
+</span><span class="hll"><span class="sd">Get the value of the 10th fibonacci number</span>
+</span><span class="hll">
+</span><span class="hll"><span class="sd">&gt;&gt;&gt; import fibonacci</span>
+</span><span class="hll"><span class="sd">&gt;&gt;&gt; fibonacci.fib(10)</span>
+</span><span class="hll"><span class="sd">55</span>
+</span>
+<span class="sd">&quot;&quot;&quot;</span>
+</pre></div>
+</div>
+<p>We now have a docstring with a piece of example code. We can test this by calling tox:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span> $ tox -e doctest
+ ...
+ lines removed
+ ...
+ looking <span class="k">for</span> now-outdated files... none found
+ pickling environment... <span class="k">done</span>
+ checking consistency... <span class="k">done</span>
+ running tests...
+
+ Document: fibonacci
+ -------------------
+ <span class="m">1</span> items passed all tests:
+    <span class="m">2</span> tests in default
+ <span class="m">2</span> tests in <span class="m">1</span> items.
+ <span class="m">2</span> passed and <span class="m">0</span> failed.
+ Test passed.
+
+ Doctest <span class="nv">summary</span>
+ <span class="o">===============</span>
+     <span class="m">2</span> tests
+     <span class="m">0</span> failures in tests
+     <span class="m">0</span> failures in setup code
+     <span class="m">0</span> failures in cleanup code
+ build succeeded.
+
+ Testing of doctests in the sources finished, look at the results in build/doctest/output.txt.
+ make: Leaving directory <span class="s1">&#39;/home/longr/Public/PyCFFI/python_packaging_example/docs&#39;</span>
+__________________________________________________ summary _________________________________________________
+doctest: commands succeeded
+congratulations :<span class="o">)</span>
+</pre></div>
+</div>
+<p>Hopefully our “tests” passed, you could try changing the output to another number to see how it fails.</p>
+<p>Similarly, we can add code snippets into our reStructured text files.</p>
+<div class="admonition-todo admonition" id="id18">
+<p class="admonition-title">Todo</p>
+<ul class="simple">
+<li><p>Should we discuss <cite>pytest –doctest-modules</cite>?  Perhaps not, but could do in separate section. Or in Pytest?</p></li>
+<li><p><a class="reference external" href="http://doc.pytest.org/en/latest/doctest.html">pyTest doctest</a></p></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="section" id="documentation-further-reading">
+<h2><a class="toc-backref" href="#id46">Documentation - Further Reading</a><a class="headerlink" href="#documentation-further-reading" title="Permalink to this headline">¶</a></h2>
+<p>Use one of any tutorials:</p>
+<p><a class="reference external" href="https://www.pythonforthelab.com/blog/documenting-with-sphinx-and-readthedocs/">Sphinx and ReadTheDocs</a>
+<a class="reference external" href="https://gisellezeno.com/tutorials/sphinx-for-python-documentation.html">Sphinx for Python</a></p>
+<div class="admonition-todo admonition" id="id19">
+<p class="admonition-title">Todo</p>
+<p>Should we use PFTL style or quickstart?</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/sphinx-contrib/apidoc">https://github.com/sphinx-contrib/apidoc</a></p></li>
+<li><p><a class="reference external" href="https://opendev.org/openstack/openstacksdk/src/branch/master/tox.ini">https://opendev.org/openstack/openstacksdk/src/branch/master/tox.ini</a></p></li>
+<li><p><a class="reference external" href="https://pypi.org/project/pytest-sphinx/">https://pypi.org/project/pytest-sphinx/</a></p></li>
+<li><p><a class="reference external" href="https://samnicholls.net/2016/06/15/how-to-sphinx-readthedocs/">https://samnicholls.net/2016/06/15/how-to-sphinx-readthedocs/</a></p></li>
+<li><p><a class="reference external" href="https://tox.readthedocs.io/en/latest/example/documentation.html">https://tox.readthedocs.io/en/latest/example/documentation.html</a></p></li>
+<li><p><a class="reference external" href="https://medium.com/&#64;eikonomega/getting-started-with-sphinx-autodoc-part-1-2cebbbca5365">https://medium.com/&#64;eikonomega/getting-started-with-sphinx-autodoc-part-1-2cebbbca5365</a></p></li>
+<li><p><a class="reference external" href="https://alexgaynor.net/2010/dec/17/getting-most-out-tox/">https://alexgaynor.net/2010/dec/17/getting-most-out-tox/</a></p></li>
+<li><p><a class="reference external" href="https://github.com/Syntaf/travis-sphinx">https://github.com/Syntaf/travis-sphinx</a></p></li>
+<li><p><a class="reference external" href="https://ofosos.org/2019/01/06/doctest-travis/">https://ofosos.org/2019/01/06/doctest-travis/</a></p></li>
+<li><p><a class="reference external" href="https://blog.justinwflory.com/2018/12/meet-an-opinionated-quickstart-for-sphinx-docs-authors/">https://blog.justinwflory.com/2018/12/meet-an-opinionated-quickstart-for-sphinx-docs-authors/</a></p></li>
+<li><p><a class="reference external" href="https://docs.pylonsproject.org/projects/docs-style-guide/">https://docs.pylonsproject.org/projects/docs-style-guide/</a></p></li>
+<li><p><a class="reference external" href="https://github.com/Pylons/docs-style-guide/blob/master/tox.ini">https://github.com/Pylons/docs-style-guide/blob/master/tox.ini</a></p></li>
+<li><p><a class="reference external" href="https://opendev.org/openstack/openstacksdk/src/branch/master/tox.ini">https://opendev.org/openstack/openstacksdk/src/branch/master/tox.ini</a></p></li>
+<li><p><a class="reference external" href="https://github.com/Pylons/docs-style-guide/blob/master/tox.ini">https://github.com/Pylons/docs-style-guide/blob/master/tox.ini</a></p></li>
+<li><p><a class="reference external" href="https://github.com/iScrE4m/pyCardDeck/blob/master/tox.ini">https://github.com/iScrE4m/pyCardDeck/blob/master/tox.ini</a></p></li>
+<li><p><a class="reference external" href="https://developer.ridgerun.com/wiki/index.php/How_to_generate_sphinx_documentation_for_python_code_running_in_an_embedded_system">https://developer.ridgerun.com/wiki/index.php/How_to_generate_sphinx_documentation_for_python_code_running_in_an_embedded_system</a></p></li>
+<li><p><a class="reference external" href="https://tox.readthedocs.io/en/latest/example/documentation.html">https://tox.readthedocs.io/en/latest/example/documentation.html</a></p></li>
+<li><p><a class="reference external" href="https://alexgaynor.net/2010/dec/17/getting-most-out-tox/">https://alexgaynor.net/2010/dec/17/getting-most-out-tox/</a></p></li>
+<li><p><a class="reference external" href="https://stackoverflow.com/questions/56336234/build-fail-sphinx-error-contents-rst-not-found">https://stackoverflow.com/questions/56336234/build-fail-sphinx-error-contents-rst-not-found</a></p></li>
+<li><p><a class="reference external" href="https://www.dominicrodger.com/2013/07/26/tox-and-travis/">https://www.dominicrodger.com/2013/07/26/tox-and-travis/</a></p></li>
+<li><p><a class="reference external" href="https://github.com/tox-dev/tox-travis/blob/master/.travis.yml">https://github.com/tox-dev/tox-travis/blob/master/.travis.yml</a></p></li>
+<li><p><a class="reference external" href="https://github.com/Pylons/pyramid/blob/master/docs/Makefile">https://github.com/Pylons/pyramid/blob/master/docs/Makefile</a></p></li>
+</ul>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Pyramids is considered the gold standard for sphinx.  They have modifed make file, consider doing the same to allow build.    Also perhaps remove travis-tox?? to confusing and hides things?</p>
+</div>
+</div>
+<div class="section" id="ci-and-docs">
+<h2><a class="toc-backref" href="#id47">CI and Docs</a><a class="headerlink" href="#ci-and-docs" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="read-the-docs">
+<h3><a class="toc-backref" href="#id48">Read the docs</a><a class="headerlink" href="#read-the-docs" title="Permalink to this headline">¶</a></h3>
+</div>
+</div>
+<div class="section" id="code-quality-with-linters">
+<h2><a class="toc-backref" href="#id49">Code Quality with Linters</a><a class="headerlink" href="#code-quality-with-linters" title="Permalink to this headline">¶</a></h2>
+<dl class="simple">
+<dt><a class="reference external" href="https://github.com/python/black">Black - code style</a></dt><dd><p>Use flag <code class="docutils literal notranslate"><span class="pre">--skip-string-normalization</span></code> as black swaps to double which is harder to read.</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="uploading-to-pipy-with-ci">
+<h2><a class="toc-backref" href="#id50">Uploading to PiPy with CI</a><a class="headerlink" href="#uploading-to-pipy-with-ci" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="https://gist.github.com/gboeing/dcfaf5e13fad16fc500717a3a324ec17">Upload to PyPi</a></p>
+<div class="admonition-todo admonition" id="id20">
+<p class="admonition-title">Todo</p>
+<p>Do we need to talk about MANINFEST.ini and packaging data with projects?</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>What does what</p>
+<p>setup.py - distributable
+pytest - check it is correct
+coverage.py - check how much is tested
+travis.ci - check it is always checked
+tox/travis.ci - check it is reproducable
+style guide - make sure it is written consistently
+black - force it to be written consistently
+comments - explain why that bit of code does that
+documentation - how to use it
+developer guide - how it works
+contributor guide - how to help
+licence - how it can be used
+<a class="reference external" href="http://graphviz.org/">http://graphviz.org/</a>
+<a class="reference external" href="https://blog.codinghorror.com/code-tells-you-how-comments-tell-you-why/">https://blog.codinghorror.com/code-tells-you-how-comments-tell-you-why/</a></p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="../fibonacci.html" class="btn btn-neutral float-left" title="Module API for Fibonacci" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Robin Long
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
