@@ -1,6 +1,6 @@
 TODO
 dist/
-build/
+_build/
 fibonacci.egg-info/
 *~
 *.o
