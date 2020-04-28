@@ -18,5 +18,18 @@ matrix:
     - python: 3.7
       env: TOXENV=docs
 
+
+## Could we deploy to GH pages with this?
+
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $GITHUB_TOKEN  # Set in travis-ci.org dashboard, marked secure
+  keep-history: true
+  on:
+    branch: master
+    condition: "$TOXENV == docs"
+  local_dir: docs/build/html/
+
 after_success:
   - codecov
